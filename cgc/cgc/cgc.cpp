@@ -76,29 +76,90 @@ int    ReadPoints( tPointi p0 )
    int mp, ms; /* i index of max (u-r) primary and secondary points */
 
    m = 0;
-   scanf("%d", &n );
-   if ( n > PMAX )
-      printf("Error in ReadPoints:  > %d\n", PMAX), exit(EXIT_FAILURE);
-   for( i = 0; i < n; i++ ) {
-      scanf("%d %d",&P[i].v[X],&P[i].v[Y]);
-      P[i].vnum = i;
-      P[i].primary = true;
-      m++;
-   }
+
+   i = 0;
+   n=5;
+   s=4;
+   m=n+s;
+   P[i].v[X] = 0;
+   P[i].v[Y] = 0;
+   P[i].vnum = i;
+   P[i].primary=true;
+
+   i++;
+   P[i].v[X] = 100;
+   P[i].v[Y] = 100;
+   P[i].vnum = i;
+   P[i].primary=true;
+
+   i++;
+   P[i].v[X] = 0;
+   P[i].v[Y] = 200;
+   P[i].vnum = i;
+   P[i].primary=true;
+
+   i++;
+   P[i].v[X] = -100;
+   P[i].v[Y] = 100;
+   P[i].vnum = i;
+   P[i].primary=true;
+
+   i++;
+   P[i].v[X] = 20;
+   P[i].v[Y] = 120;
+   P[i].vnum = i;
+   P[i].primary=true;
+
+   i=0;
+   P[n+i].v[X] = -20;
+   P[n+i].v[Y] = 0;
+   P[n+i].primary=false;
+   P[n+i].vnum=i;
+
+
+   i++;
+   P[n+i].v[X] = -40;
+   P[n+i].v[Y] = 0;
+   P[n+i].primary=false;
+   P[n+i].vnum=i;
+
+   i++;
+   P[n+i].v[X] = -40;
+   P[n+i].v[Y] = -20;
+   P[n+i].primary=false;
+   P[n+i].vnum=i;
+
+   i++;
+   P[n+i].v[X] = -20;
+   P[n+i].v[Y] = -20;
+   P[n+i].primary=false;
+   P[n+i].vnum=i;
+
+
+
+   //scanf("%d", &n );
+   //if ( n > PMAX )
+   //   printf("Error in ReadPoints:  > %d\n", PMAX), exit(EXIT_FAILURE);
+   //for( i = 0; i < n; i++ ) {
+   //   scanf("%d %d",&P[i].v[X],&P[i].v[Y]);
+   //   P[i].vnum = i;
+   //   P[i].primary = true;
+   //   m++;
+   //}
    /*printf("%%ReadPoints: %d primary points read\n", n);*/
 
-   scanf("%d", &s );
-   if ( n+s > PMAX )
-      printf("Error in ReadPoints:  > %d\n", PMAX), exit(EXIT_FAILURE);
-   for( i = 0; i < s; i++ ) {
-      scanf("%d %d",&P[n+i].v[X],&P[n+i].v[Y]);
-      /* Reflect secondary polygon */
-      P[n+i].v[X] = -P[n+i].v[X];
-      P[n+i].v[Y] = -P[n+i].v[Y];
-      P[n+i].vnum = i;
-      P[n+i].primary = false;
-      m++;
-   }
+   //scanf("%d", &s );
+   //if ( n+s > PMAX )
+   //   printf("Error in ReadPoints:  > %d\n", PMAX), exit(EXIT_FAILURE);
+   //for( i = 0; i < s; i++ ) {
+   //   scanf("%d %d",&P[n+i].v[X],&P[n+i].v[Y]);
+   //   /* Reflect secondary polygon */
+   //   P[n+i].v[X] = -P[n+i].v[X];
+   //   P[n+i].v[Y] = -P[n+i].v[Y];
+   //   P[n+i].vnum = i;
+   //   P[n+i].primary = false;
+   //   m++;
+   //}
    /*printf("%%ReadPoints: %d secondary points read\n", s);*/
 
    /* Compute Bounding Box and output Postscript header. */
@@ -122,8 +183,8 @@ int    ReadPoints( tPointi p0 )
    for (i = 1; i < s; i++) {
       if      ( P[n+i].v[X] > sxmax ) sxmax = P[n+i].v[X];
       else if ( P[n+i].v[X] < sxmin ) sxmin = P[n+i].v[X];
-      if      ( P[n+i].v[Y] > symax ) {symax = P[n+i].v[Y]; ms+= i;}
-      else if ( P[n+i].v[Y] == symax && (P[n+i].v[X] > P[ms].v[X]) ) ms+= i;
+      if      ( P[n+i].v[Y] > symax ) {symax = P[n+i].v[Y]; ms= n+i;}
+      else if ( P[n+i].v[Y] == symax && (P[n+i].v[X] > P[ms].v[X]) ) ms= n+i;
       else if ( P[n+i].v[Y] < symin ) symin = P[n+i].v[Y];
    }
    printf("%%Index of upper rightmost secondary, i=ms = %d\n", ms);
@@ -295,13 +356,15 @@ void    Convolve( int j0, tPointi p )
    int i;  /* Index into sorted edge vectors P */
    int j;  /* Primary polygon indices */
 
+   
+
+   i = 0;  /* Start at angle -pi, rightward vector. */
+   j = j0; /* Start searching for j0. */
+
    printf("%%Convolve: Start array i = %d, primary j0= %d\n", i, j0);
    printf("1 1 setlinewidth\n");
    printf("newpath\n");
    printf("%d\t%d\tmoveto\n", p[X], p[Y]);
-
-   i = 0;  /* Start at angle -pi, rightward vector. */
-   j = j0; /* Start searching for j0. */
    do {
 
       /* Advance around secondary edges until next j reached. */
