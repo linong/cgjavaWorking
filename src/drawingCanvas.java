@@ -76,10 +76,30 @@ public class drawingCanvas extends JFrame {
     }
 
     // The entry main method
-    public static void main(String[] args) {
 
+    private static void test1()
+    {
+       mc = new MinkConvol();
+        cVertexList first = new cVertexList();
+        first.InsertBeforeHead( new cVertex(0,0));
+        first.InsertBeforeHead(new cVertex(100,100));
+        first.InsertBeforeHead(new cVertex(0,200));
+        first.InsertBeforeHead(new cVertex(-100,100));
+        //first.InsertBeforeHead(new cVertex(20,120));
+
+        cVertexList second = new cVertexList();
+
+        second.InsertBeforeHead(new cVertex(0,0));
+        second.InsertBeforeHead(new cVertex(20,0));
+        second.InsertBeforeHead(new cVertex(20,20));
+        second.InsertBeforeHead(new cVertex(0,20));
+        mc.initialise(first, second);
+        mc.Start();
+
+    }
+    private static void test2()
+    {
         mc = new MinkConvol();
-
         cVertexList first = new cVertexList();
         first.InsertBeforeHead( new cVertex(0,0));
         first.InsertBeforeHead(new cVertex(100,100));
@@ -88,12 +108,20 @@ public class drawingCanvas extends JFrame {
         first.InsertBeforeHead(new cVertex(20,120));
 
         cVertexList second = new cVertexList();
+
+
         second.InsertBeforeHead(new cVertex(0,0));
         second.InsertBeforeHead(new cVertex(20,0));
         second.InsertBeforeHead(new cVertex(20,20));
         second.InsertBeforeHead(new cVertex(0,20));
         mc.initialise(first, second);
         mc.Start();
+
+    }
+    public static void main(String[] args) {
+
+        test2();
+
         // Run the GUI codes on the Event-Dispatching thread for thread safety
         SwingUtilities.invokeLater(new Runnable() {
             @Override

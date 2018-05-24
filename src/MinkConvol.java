@@ -29,10 +29,11 @@ public class MinkConvol {
     mc.first.InsertBeforeHead(new cVertex(20,120));
 
     mc.second = new cVertexList();
-    mc.second.InsertBeforeHead(new cVertex(0,0));
+    //mc.second.InsertBeforeHead(new cVertex(0,0));
     mc.second.InsertBeforeHead(new cVertex(20,0));
+    mc.second.InsertBeforeHead(new cVertex(40,0));
+    mc.second.InsertBeforeHead(new cVertex(40,20));
     mc.second.InsertBeforeHead(new cVertex(20,20));
-    mc.second.InsertBeforeHead(new cVertex(0,20));
 
     //mc.initialise(mc.first,mc.second);
     mc.Start();
@@ -66,8 +67,11 @@ public class MinkConvol {
     do {
       v2 = v1.next;
       g.setColor(color);
-      if(P.n >= 2)
+      if(P.n >= 2) {
         g.drawLine(v1.v.x, v1.v.y, v2.v.x, v2.v.y);
+
+        g.drawString(v1.v.x+","+v1.v.y,v1.v.x,v1.v.y);
+      }
       //g.fillOval(v1.v.x - (int)(w/2), v1.v.y - (int)(h/2), w, h);
       // g.fillOval(v2.v.x - (int)(w/2), v2.v.y - (int)(h/2), w, h);
       v1 = v1.next;
@@ -140,8 +144,9 @@ public class MinkConvol {
     if (!B.CheckForConvexity())  /* Second polygon must be convex */
       return false;
 
+    //I believe because we will reflect B with (0.0)
     B.ReverseList();
-    
+
     return true;
   }
 
@@ -200,13 +205,26 @@ public class MinkConvol {
    int sxwithYMax = v.v.x;
    ms = n; v = v.next; i = 1;
    do {
-     if      ( v.v.x > sxmax ) sxmax = v.v.x;
-     else if ( v.v.x < sxmin ) sxmin = v.v.x;
-     if      ( v.v.y > symax ) {symax = v.v.y; ms = i; sxwithYMax = v.v.x;}
-     else if ( v.v.y == symax && (v.v.x > sxwithYMax) ) { ms = i ; sxwithYMax = v.v.x; }
-     else if ( v.v.y < symin ) symin = v.v.y;
+     if      ( v.v.x > sxmax )
+       sxmax = v.v.x;
+     else if ( v.v.x < sxmin )
+       sxmin = v.v.x;
+     if      ( v.v.y > symax )
+     {
+       symax = v.v.y;
+       ms = i+n;
+       sxwithYMax = v.v.x;
+     }
+     else if
+             ( v.v.y == symax && (v.v.x > sxwithYMax) )
+     {
+       ms = i+n ;
+       sxwithYMax = v.v.x;
+     }
+     else if ( v.v.y < symin )
+       symin = v.v.y;
      v = v.next; i++;
-   } while ( v != P.head.next );
+   } while ( v != P.head );
    /*System.out.println("Index of upper rightmost secondary, i=ms = "+ms);*/
 
    /* Compute the start point: upper rightmost of both. */
