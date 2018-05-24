@@ -16,20 +16,62 @@ public class MinkConvol {
   private cPointi p0;
   private cPointi last;  /* Holds the last vector difference. */
 
+  static public cVertexList first, second;
+
   public static void main(String[] args){
     MinkConvol mc = new MinkConvol();
-
-    cVertexList first = new cVertexList();
-    first.InsertBeforeHead( new cVertex(2,1));
-    first.InsertBeforeHead(new cVertex(4,1));
-    first.InsertBeforeHead(new cVertex(4,4));
-    first.InsertBeforeHead(new cVertex(3,5));
-
-    cVertexList second = new cVertexList();
-    second.InsertBeforeHead(new cVertex(3,0));
-    second.InsertBeforeHead(new cVertex(5,0));
-    second.InsertBeforeHead(new cVertex(3,3));
+    mc.initialise();
     mc.Start(first, second);
+  }
+  public  void initialise()
+  {
+    first = new cVertexList();
+    first.InsertBeforeHead( new cVertex(0,0));
+    first.InsertBeforeHead(new cVertex(100,100));
+    first.InsertBeforeHead(new cVertex(0,200));
+    first.InsertBeforeHead(new cVertex(-100,100));
+    first.InsertBeforeHead(new cVertex(20,120));
+
+    second = new cVertexList();
+    second.InsertBeforeHead(new cVertex(0,0));
+    second.InsertBeforeHead(new cVertex(20,0));
+    second.InsertBeforeHead(new cVertex(20,20));
+    second.InsertBeforeHead(new cVertex(0,20));
+
+  }
+  public void drawResult(Graphics g){
+
+    int w = 600;
+    int h = 600;
+    System.out.println("before drawing enlarged polygon, its vertices:");
+    output.PrintVertices();
+
+    drawList(g,first,Color.black);
+    drawList(g,second,Color.black);
+    drawList(g,output,Color.pink);
+
+    System.out.println("the enlarged polygon has been drawn");
+  }
+
+  private void drawList(Graphics g, cVertexList list, Color color)
+  {
+    cVertex v1 = list.head;
+    cVertex v2;
+
+    do {
+      v2 = v1.next;
+      g.setColor(color);
+      if(P.n >= 2)
+        g.drawLine(v1.v.x, v1.v.y, v2.v.x, v2.v.y);
+      //g.fillOval(v1.v.x - (int)(w/2), v1.v.y - (int)(h/2), w, h);
+      // g.fillOval(v2.v.x - (int)(w/2), v2.v.y - (int)(h/2), w, h);
+      v1 = v1.next;
+    } while (v1 != list.head.prev);
+    g.drawLine(v1.v.x, v1.v.y, v1.next.v.x, v1.next.v.y);
+
+  }
+
+  public void test(){
 
   }
   MinkConvol()
@@ -130,14 +172,16 @@ public class MinkConvol {
    mp = ms = 0;     v = P.head;
    xmin = xmax = v.v.x;
    ymin = ymax = v.v.y;
+   int xwithYMax = v.v.x;
    mp = 0; i = 1; 
    v = v.next;
    cVertex startB = P.GetElement(n);
+
    do {
      if      ( v.v.x > xmax ) xmax = v.v.x;
      else if ( v.v.x < xmin ) xmin = v.v.x;
-     if      ( v.v.y > ymax ) {ymax = v.v.y; mp = i;}
-     else if ( v.v.y == ymax && (v.v.x > P.GetElement(mp).v.x) ) mp = i;
+     if      ( v.v.y > ymax ) {ymax = v.v.y; mp = i; xwithYMax = v.v.x;}
+     else if ( v.v.y == ymax && (v.v.x > xwithYMax) ) { mp = i; xwithYMax = v.v.x; }
      else if ( v.v.y < ymin ) ymin = v.v.y;
      v = v.next; i++;
    } while ( v != startB );
@@ -145,12 +189,13 @@ public class MinkConvol {
    v = startB;
    sxmin = sxmax = v.v.x;
    symin = symax = v.v.y;
+   int sxwithYMax = v.v.x;
    ms = n; v = v.next; i = 1;
    do {
      if      ( v.v.x > sxmax ) sxmax = v.v.x;
      else if ( v.v.x < sxmin ) sxmin = v.v.x;
-     if      ( v.v.y > symax ) {symax = v.v.y; ms = i;}
-     else if ( v.v.y == symax && (v.v.x > P.GetElement(ms).v.x) ) ms = i;
+     if      ( v.v.y > symax ) {symax = v.v.y; ms = i; sxwithYMax = v.v.x;}
+     else if ( v.v.y == symax && (v.v.x > sxwithYMax) ) { ms = i ; sxwithYMax = v.v.x; }
      else if ( v.v.y < symin ) symin = v.v.y;
      v = v.next; i++;
    } while ( v != P.head.next );
@@ -166,7 +211,8 @@ public class MinkConvol {
    p0.PrintPoint();
    System.out.println("ms is: "+ms);
    System.out.println("ms element:"+P.GetElement(ms).v.x+","+P.GetElement(ms).v.y);
-   //   AddVec( p0, P.GetElement(ms).v, p0 );
+    //This is required, if the reference of the second rectangle is not (0,0), the first point should be changed.
+   AddVec( p0, P.GetElement(ms).v, p0 );
    System.out.println("p0 after another addvec:");
    p0.PrintPoint();
    return mp;
@@ -229,6 +275,8 @@ public class MinkConvol {
     cVertex v = P.head;
 
     System.out.println("Convolve: Start array i = "+i+", primary j0="+j0);
+
+    System.out.println("move to:" + p0.x +"," +p0.y);
     PutInOutput(p0.x,p0.y);
     
     i = 0;  /* Start at angle -pi, rightward vector. */
@@ -242,6 +290,7 @@ public class MinkConvol {
 	if ( !v.mark ) {
 	  p0 = AddVec( p0, v.v );
 	  PutInOutput(p0.x,p0.y);
+      System.out.println("line to:" + p0.x +"," +p0.y);
 	}
 	v = v.next;
 	i = (i+1)%m;
@@ -252,6 +301,7 @@ public class MinkConvol {
       System.out.println("X: j="+j+" found at i="+i);
       p0 = AddVec( p0, v.v);
       PutInOutput(p0.x,p0.y);
+      System.out.println("line to:" + p0.x +"," +p0.y);
       j = (j+1)%n;
       System.out.println("X: j incremented to "+j);
       
@@ -262,6 +312,7 @@ public class MinkConvol {
       if ( !v.mark ) {
 	p0 = AddVec (p0, v.v);
 	PutInOutput (p0.x, p0.y);
+    System.out.println("line to:" + p0.x +"," +p0.y);
       }
       i = (i+1)%m;
     }
