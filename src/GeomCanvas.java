@@ -213,7 +213,8 @@ public class GeomCanvas extends Canvas
   public boolean ToFindMinkConv()
   {
     if (list.n > 2 && list2.n > 2) {
-      if (!mc.Start(list, list2)) 
+        mc.initialise(list,list2);
+      if (!mc.Start())
 	return false;
       else
 	minkconvol = true;

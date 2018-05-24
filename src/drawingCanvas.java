@@ -79,8 +79,21 @@ public class drawingCanvas extends JFrame {
     public static void main(String[] args) {
 
         mc = new MinkConvol();
-        mc.initialise();
-        mc.Start(mc.first, mc.second);
+
+        cVertexList first = new cVertexList();
+        first.InsertBeforeHead( new cVertex(0,0));
+        first.InsertBeforeHead(new cVertex(100,100));
+        first.InsertBeforeHead(new cVertex(0,200));
+        first.InsertBeforeHead(new cVertex(-100,100));
+        first.InsertBeforeHead(new cVertex(20,120));
+
+        cVertexList second = new cVertexList();
+        second.InsertBeforeHead(new cVertex(0,0));
+        second.InsertBeforeHead(new cVertex(20,0));
+        second.InsertBeforeHead(new cVertex(20,20));
+        second.InsertBeforeHead(new cVertex(0,20));
+        mc.initialise(first, second);
+        mc.Start();
         // Run the GUI codes on the Event-Dispatching thread for thread safety
         SwingUtilities.invokeLater(new Runnable() {
             @Override

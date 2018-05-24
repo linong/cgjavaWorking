@@ -16,27 +16,32 @@ public class MinkConvol {
   private cPointi p0;
   private cPointi last;  /* Holds the last vector difference. */
 
-  static public cVertexList first, second;
+  private cVertexList first, second;
 
   public static void main(String[] args){
     MinkConvol mc = new MinkConvol();
-    mc.initialise();
-    mc.Start(first, second);
-  }
-  public  void initialise()
-  {
-    first = new cVertexList();
-    first.InsertBeforeHead( new cVertex(0,0));
-    first.InsertBeforeHead(new cVertex(100,100));
-    first.InsertBeforeHead(new cVertex(0,200));
-    first.InsertBeforeHead(new cVertex(-100,100));
-    first.InsertBeforeHead(new cVertex(20,120));
 
-    second = new cVertexList();
-    second.InsertBeforeHead(new cVertex(0,0));
-    second.InsertBeforeHead(new cVertex(20,0));
-    second.InsertBeforeHead(new cVertex(20,20));
-    second.InsertBeforeHead(new cVertex(0,20));
+    mc.first = new cVertexList();
+    mc.first.InsertBeforeHead( new cVertex(0,0));
+    mc.first.InsertBeforeHead(new cVertex(100,100));
+    mc.first.InsertBeforeHead(new cVertex(0,200));
+    mc.first.InsertBeforeHead(new cVertex(-100,100));
+    mc.first.InsertBeforeHead(new cVertex(20,120));
+
+    mc.second = new cVertexList();
+    mc.second.InsertBeforeHead(new cVertex(0,0));
+    mc.second.InsertBeforeHead(new cVertex(20,0));
+    mc.second.InsertBeforeHead(new cVertex(20,20));
+    mc.second.InsertBeforeHead(new cVertex(0,20));
+
+    //mc.initialise(mc.first,mc.second);
+    mc.Start();
+  }
+  //first, second initialized here for calling Start
+  public  void initialise(cVertexList p, cVertexList q)
+  {
+    first = p;
+    second = q;
 
   }
   public void drawResult(Graphics g){
@@ -88,8 +93,11 @@ public class MinkConvol {
     p0.x = p0.y = 0;
   }
 
-  public boolean Start(cVertexList p, cVertexList q)
+  public boolean Start()
   {
+
+    cVertexList p = first;
+    cVertexList q = second;
     p0.x = p0.y = 0;
     if (!CheckForConvexity(p,q)) {
       System.out.println("Second polygon is  not convex...");
