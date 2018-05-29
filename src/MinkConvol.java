@@ -5,7 +5,7 @@
  *---------------------------------------------------------------------------*/
 import java.awt.*;
 
-public class MinkConvol {
+public class MinkConvol implements drawableObj {
 
   private cVertexList P, B;   /* list of vectors, list of the 2nd polygon */
   private cVertexList output; /* list capturing  the enlarged, resulting polygon */ 
@@ -16,7 +16,8 @@ public class MinkConvol {
   private cPointi p0;
   private cPointi last;  /* Holds the last vector difference. */
 
-  private cVertexList first, second;
+  private cVertexList first;
+  private cVertexList second;
 
   public static void main(String[] args){
     MinkConvol mc = new MinkConvol();
@@ -36,19 +37,17 @@ public class MinkConvol {
     mc.second.InsertBeforeHead(new cVertex(20,20));
 
     //mc.initialise(mc.first,mc.second);
-    mc.Start();
+    mc.start();
   }
-  //first, second initialized here for calling Start
-  public  void initialise(cVertexList p, cVertexList q)
+  //first, second initialized here for calling start
+  public  void initialise(cVertexList a, cVertexList b)
   {
-    first = p;
-    second = q;
 
+      first = a;
+      second = b;
   }
   public void drawResult(Graphics g){
 
-    int w = 600;
-    int h = 600;
     System.out.println("before drawing enlarged polygon, its vertices:");
     output.PrintVertices();
 
@@ -97,7 +96,7 @@ public class MinkConvol {
     p0.x = p0.y = 0;
   }
 
-  public boolean Start()
+  public boolean start()
   {
 
     cVertexList p = first;
@@ -300,13 +299,13 @@ public class MinkConvol {
     int j = 0;      /* Primary polygon indices */
     cVertex v = P.head;
 
-    System.out.println("Convolve: Start array i = "+i+", primary j0="+j0);
+    System.out.println("Convolve: start array i = "+i+", primary j0="+j0);
 
     System.out.println("move to:" + p0.x +"," +p0.y);
     PutInOutput(p0.x,p0.y);
     
-    i = 0;  /* Start at angle -pi, rightward vector. */
-    j = j0; /* Start searching for j0. */
+    i = 0;  /* start at angle -pi, rightward vector. */
+    j = j0; /* start searching for j0. */
     v = P.GetElement(i);
     System.out.println("Convolve, getElement(0)..."+v.v.x+", "+v.v.y);
     do {
@@ -407,4 +406,6 @@ public class MinkConvol {
     g.drawLine(v1.v.x, v1.v.y, v1.next.v.x, v1.next.v.y);
     System.out.println("the enlarged polygon has been drawn");
   }
+
+
 }

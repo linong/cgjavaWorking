@@ -42,7 +42,7 @@ public class GeomCanvas extends Canvas
     first = found = firstpoly = true; 
     toClear = toDelete = toAdd = toMove = first2 = done = done1 = 
       done2 = secndpoly = poly2inters = minkconvol = false; 
-    query = extrap = centr = trian = toPaint = toDelTri = false; 
+    query = extrap = centr = trian = toPaint = toDelTri = false;
     list = new cVertexList();
     list2 = new cVertexList();
     myCH = new ConvexHull2D(list);
@@ -214,7 +214,7 @@ public class GeomCanvas extends Canvas
   {
     if (list.n > 2 && list2.n > 2) {
         mc.initialise(list,list2);
-      if (!mc.Start())
+      if (!mc.start())
 	return false;
       else
 	minkconvol = true;

@@ -4,7 +4,6 @@
 
 
 import java.awt.*;       // Using AWT's Graphics and Color
-        import java.awt.event.*; // Using AWT event classes and listener interfaces
 import java.awt.geom.AffineTransform;
 import javax.swing.*;    // Using Swing's components and containers
 
@@ -18,7 +17,7 @@ public class drawingCanvas extends JFrame {
     // Declare an instance of the drawing canvas,
     // which is an inner class called DrawCanvas extending javax.swing.JPanel.
     private DrawCanvas canvas;
-    static private MinkConvol mc;
+    static private drawableObj mc;
 
     // Constructor to set up the GUI components and event handlers
     public drawingCanvas() {
@@ -55,31 +54,51 @@ public class drawingCanvas extends JFrame {
             g.drawLine(0,-CANVAS_HEIGHT/2,0,CANVAS_HEIGHT/2);
             mc.drawResult(g);
 
-
-
-            //setBackground(Color.BLACK);  // set background color for this JPanel
-
-            // Your custom painting codes. For example,
-            // Drawing primitive shapes
-//            g.setColor(Color.YELLOW);    // set the drawing color
-//            g.drawLine(30, 40, 100, 200);
-//            g.drawOval(150, 180, 10, 10);
-//            g.drawRect(200, 210, 20, 30);
-//            g.setColor(Color.RED);       // change the drawing color
-//            g.fillOval(300, 310, 30, 50);
-//            g.fillRect(400, 350, 60, 50);
-            // Printing texts
-            //g.setColor(Color.WHITE);
-            //g.setFont(new Font("Monospaced", Font.PLAIN, 12));
-            //g.drawString("Testing custom drawing ...", 10, 20);
         }
     }
 
     // The entry main method
 
+
+    private static void testTri(){
+        System.out.println("test testTri");
+        cVertexList list = new cVertexList();
+        list.InsertBeforeHead(new cVertex(0,0));
+        list.InsertBeforeHead(new cVertex(10,7));
+        list.InsertBeforeHead(new cVertex(12,3));
+        list.InsertBeforeHead(new cVertex(20,8));
+        list.InsertBeforeHead(new cVertex(13,17));
+        list.InsertBeforeHead(new cVertex(10,12));
+        list.InsertBeforeHead(new cVertex(12,14));
+        list.InsertBeforeHead(new cVertex(14,9));
+        list.InsertBeforeHead(new cVertex(8,10));
+        list.InsertBeforeHead(new cVertex(6,14));
+        list.InsertBeforeHead(new cVertex(10,15));
+        list.InsertBeforeHead(new cVertex(7,20));
+        list.InsertBeforeHead(new cVertex(0,16));
+        list.InsertBeforeHead(new cVertex(1,13));
+        list.InsertBeforeHead(new cVertex(3,15));
+        list.InsertBeforeHead(new cVertex(5,8));
+        list.InsertBeforeHead(new cVertex(-2,9));
+        list.InsertBeforeHead(new cVertex(5,5));
+
+        cVertex head = list.head;
+        do{
+            head.multiWith(10);
+            head=head.next;
+        }
+        while(head!=list.head);
+
+
+        mc = new cPolygoni(list);
+        mc.start();
+
+    }
+
+
     private static void test1()
     {
-       mc = new MinkConvol();
+        mc = new MinkConvol();
         cVertexList first = new cVertexList();
         first.InsertBeforeHead( new cVertex(0,0));
         first.InsertBeforeHead(new cVertex(100,100));
@@ -93,8 +112,8 @@ public class drawingCanvas extends JFrame {
         second.InsertBeforeHead(new cVertex(20,0));
         second.InsertBeforeHead(new cVertex(20,20));
         second.InsertBeforeHead(new cVertex(0,20));
-        mc.initialise(first, second);
-        mc.Start();
+        mc.initialise(first,second);
+        mc.start();
 
     }
     private static void test2()
@@ -114,13 +133,14 @@ public class drawingCanvas extends JFrame {
         second.InsertBeforeHead(new cVertex(20,0));
         second.InsertBeforeHead(new cVertex(20,20));
         second.InsertBeforeHead(new cVertex(0,20));
-        mc.initialise(first, second);
-        mc.Start();
+
+        mc.initialise(first,second);
+        mc.start();
 
     }
     public static void main(String[] args) {
 
-        test2();
+        testTri();
 
         // Run the GUI codes on the Event-Dispatching thread for thread safety
         SwingUtilities.invokeLater(new Runnable() {

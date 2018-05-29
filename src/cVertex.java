@@ -43,6 +43,12 @@ class cVertex {
     prev = next = null;
   }
 
+  public void multiWith(int m){
+    v.x= v.x*m;
+    v.y = v.y*m;
+
+  }
+
   /* Raises point to 3D by placing in on paraboloid */
   public void ResetVertex3D()
   {

@@ -30,27 +30,33 @@ They can be classified into three groups:
 ----------------------------------------------------------------------*/
 import java.awt.*;
 
-public class cPolygoni 
-{	 
-  static final int SCREENWIDTH = 400;	//max number of intersections 
+public class cPolygoni implements drawableObj
+{
+  static final int SCREENWIDTH = 400;	//max number of intersections
   private cVertexList list, listcopy;		//vertices of polygon
   cDiagonalList diaglist;
   cPointd CG;      	       	        //center of gravity;
 					// or pt of intersection
   private int inters[] = new int [SCREENWIDTH];
-  private int intCount = 0;		//counts intersections 
+  private int intCount = 0;		//counts intersections
                                         //when shooting the array in inPoly1
   private boolean diagdrawn = true;     //diag-s've been drawn after triang?
 
   public cPolygoni(cVertexList list)
   {
-    this.list = list;
-    listcopy = new cVertexList();
-    diaglist = new cDiagonalList();
-    CG = new cPointd(0,0);
-    intCount = 0;
-    diagdrawn = true;
+      init(list);
   }
+
+    private void init(cVertexList list)
+    {
+        this.list = list;
+        listcopy = new cVertexList();
+        diaglist = new cDiagonalList();
+        CG = new cPointd(0,0);
+        intCount = 0;
+        diagdrawn = true;
+
+    }
 
   /* Used to free up resourses */
   public void ClearPolygon()
@@ -360,4 +366,53 @@ public class cPolygoni
     g.fillOval((int)CG.x - (int)(w/2), (int)CG.y - (int)(h/2), w,h);
   }
 
+
+//    public void drawResult(Graphics g){
+//
+//        int w = 600;
+//        int h = 600;
+//        System.out.println("before drawing enlarged polygon, its vertices:");
+//        output.PrintVertices();
+//
+//        drawList(g,first,Color.black);
+//        drawList(g,second,Color.black);
+//        drawList(g,output,Color.pink);
+//
+//        System.out.println("the enlarged polygon has been drawn");
+//    }
+
+    public void initialise(cVertexList first, cVertexList second)
+    {
+
+
+
+    }
+
+    public void drawResult(Graphics g)
+    {
+        drawPoly(g);
+        diaglist.DrawDiagonals(g,Color.red);
+    }
+    private void drawPoly(Graphics g){
+
+        cVertex v = list.head;
+        int i=0;
+        if (v == null)
+            System.out.println("Polygon is empty");
+        else {
+            do {
+                cVertex next = v.next;
+                g.drawLine(v.v.x,v.v.y,next.v.x,next.v.y);
+                v = v.next;
+            } while (v != list.head);
+        }
+    }
+
+    public boolean start()
+    {
+        PrintPoly();
+        ListCopy();
+        Triangulate();
+        return true;
+    }
 } //End class cPolygoni
