@@ -388,24 +388,23 @@ public class MinkConvol implements drawableObj {
    */
   public void DrawMinkConvol(Graphics g, int w, int h)
   {
-   // not used
-//    System.out.println("before drawing enlarged polygon, its vertices:");
-//    output.PrintVertices();
-//
-//    cVertex v1 = output.head;
-//    cVertex v2;
-//
-//    do {
-//      v2 = v1.next;
-//      g.setColor(Color.pink);
-//      if(P.n >= 2)
-//	g.drawLine(v1.v.x, v1.v.y, v2.v.x, v2.v.y);
-//      g.fillOval(v1.v.x - (int)(w/2), v1.v.y - (int)(h/2), w, h);
-//      g.fillOval(v2.v.x - (int)(w/2), v2.v.y - (int)(h/2), w, h);
-//      v1 = v1.next;
-//    } while (v1 != output.head.prev);
-//    g.drawLine(v1.v.x, v1.v.y, v1.next.v.x, v1.next.v.y);
-//    System.out.println("the enlarged polygon has been drawn");
+    System.out.println("before drawing enlarged polygon, its vertices:");
+    output.PrintVertices();
+
+    cVertex v1 = output.head;
+    cVertex v2;
+    
+    do {
+      v2 = v1.next;
+      g.setColor(Color.pink);
+      if(P.n >= 2)
+	g.drawLine(v1.v.x, v1.v.y, v2.v.x, v2.v.y);
+      g.fillOval(v1.v.x - (int)(w/2), v1.v.y - (int)(h/2), w, h);
+      g.fillOval(v2.v.x - (int)(w/2), v2.v.y - (int)(h/2), w, h);
+      v1 = v1.next;
+    } while (v1 != output.head.prev);
+    g.drawLine(v1.v.x, v1.v.y, v1.next.v.x, v1.next.v.y);
+    System.out.println("the enlarged polygon has been drawn");
   }
 
 
