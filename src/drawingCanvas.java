@@ -6,6 +6,8 @@
 import java.awt.*;       // Using AWT's Graphics and Color
 import java.awt.geom.AffineTransform;
 import javax.swing.*;    // Using Swing's components and containers
+import java.util.ArrayList;
+import java.util.List;
 
 /** Custom Drawing Code Template */
 // A Swing application extends javax.swing.JFrame
@@ -17,7 +19,7 @@ public class drawingCanvas extends JFrame {
     // Declare an instance of the drawing canvas,
     // which is an inner class called DrawCanvas extending javax.swing.JPanel.
     private DrawCanvas canvas;
-    static private drawableObj mc;
+    static private List<drawableObj> drawObjList = new ArrayList<drawableObj>();
 
     // Constructor to set up the GUI components and event handlers
     public drawingCanvas() {
@@ -27,8 +29,6 @@ public class drawingCanvas extends JFrame {
         // Set the Drawing JPanel as the JFrame's content-pane
         Container cp = getContentPane();
         cp.add(canvas);
-        // or "setContentPane(canvas);"
-
         setDefaultCloseOperation(EXIT_ON_CLOSE);   // Handle the CLOSE button
         pack();              // Either pack() the components; or setSize()
         setTitle("......");  // "super" JFrame sets the title
@@ -52,13 +52,13 @@ public class drawingCanvas extends JFrame {
 
             g.drawLine(-CANVAS_WIDTH/2,0,CANVAS_WIDTH/2,0);
             g.drawLine(0,-CANVAS_HEIGHT/2,0,CANVAS_HEIGHT/2);
-            mc.drawResult(g);
 
+            for (drawableObj obj:drawObjList
+                 ) {
+                obj.drawResult(g);
+            }
         }
     }
-
-    // The entry main method
-
 
     private static void testTri(){
         System.out.println("test testTri");
@@ -90,15 +90,33 @@ public class drawingCanvas extends JFrame {
         while(head!=list.head);
 
 
-        mc = new cPolygoni(list);
-        mc.start();
+        cPolygoni polygoni = new cPolygoni(list);
+        polygoni.start();
+
+        drawObjList.add(polygoni);
+
+        cVertexList second = new cVertexList();
+
+        second.InsertBeforeHead(new cVertex(0,0));
+        second.InsertBeforeHead(new cVertex(20,0));
+        second.InsertBeforeHead(new cVertex(20,20));
+        second.InsertBeforeHead(new cVertex(0,20));
+
+        List<cVertexList> triList = polygoni.getTriList();
+        for (cVertexList l:triList
+             ) {
+            MinkConvol mink = new MinkConvol();
+            mink.initialise(l,second);
+            mink.start();
+            drawObjList.add(mink);
+        }
 
     }
 
 
     private static void test1()
     {
-        mc = new MinkConvol();
+        MinkConvol mc = new MinkConvol();
         cVertexList first = new cVertexList();
         first.InsertBeforeHead( new cVertex(0,0));
         first.InsertBeforeHead(new cVertex(100,100));
@@ -118,7 +136,7 @@ public class drawingCanvas extends JFrame {
     }
     private static void test2()
     {
-        mc = new MinkConvol();
+        MinkConvol mc = new MinkConvol();
         cVertexList first = new cVertexList();
         first.InsertBeforeHead( new cVertex(0,0));
         first.InsertBeforeHead(new cVertex(100,100));
