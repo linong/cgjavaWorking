@@ -267,9 +267,9 @@ public class cPolygoni implements drawableObj, GetTriListInterface
 	  diag.PrintDiagonal(listcopy.n - n);
 	  diaglist.InsertBeforeHead( diag );
         cVertexList tri = new cVertexList();
-        tri.InsertBeforeHead(v2);
-        tri.InsertBeforeHead(v1);
-        tri.InsertBeforeHead(v3);
+        tri.InsertBeforeHead(v2.copyOf());
+        tri.InsertBeforeHead(v1.copyOf());
+        tri.InsertBeforeHead(v3.copyOf());
         triList.add(tri);
         System.out.println("v2.x:"+v2.v.x +" v2.y:"+ v2.v.y);
         System.out.println("v1.x:"+v1.v.x +" v1.y:"+ v1.v.y);

@@ -27,6 +27,10 @@ class cVertex {
     mark = false;
   }
 
+  public cVertex copyOf(){
+    return new cVertex(this.v.x,this.v.y);
+  }
+
   cVertex(int i, int j) {	
     v = new cPointi();
     v.x = i;
