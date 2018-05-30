@@ -29,8 +29,12 @@ They can be classified into three groups:
 
 ----------------------------------------------------------------------*/
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class cPolygoni implements drawableObj
+
+
+public class cPolygoni implements drawableObj, GetTriListInterface
 {
   static final int SCREENWIDTH = 400;	//max number of intersections
   private cVertexList list, listcopy;		//vertices of polygon
@@ -41,6 +45,12 @@ public class cPolygoni implements drawableObj
   private int intCount = 0;		//counts intersections
                                         //when shooting the array in inPoly1
   private boolean diagdrawn = true;     //diag-s've been drawn after triang?
+
+    private List<cVertexList> triList = null;
+
+    public List<cVertexList> getTriList(){
+        return triList;
+    }
 
   public cPolygoni(cVertexList list)
   {
@@ -55,6 +65,7 @@ public class cPolygoni implements drawableObj
         CG = new cPointd(0,0);
         intCount = 0;
         diagdrawn = true;
+        triList= new ArrayList<cVertexList>();
 
     }
 
@@ -69,6 +80,7 @@ public class cPolygoni implements drawableObj
       inters[i] = 0;
     //    System.out.println("Polygon cleared");
     diagdrawn = true;
+      triList.clear();
     PrintPoly();
   }
 
@@ -254,6 +266,14 @@ public class cPolygoni implements drawableObj
 	  diag = new cDiagonal (v1, v3);
 	  diag.PrintDiagonal(listcopy.n - n);
 	  diaglist.InsertBeforeHead( diag );
+        cVertexList tri = new cVertexList();
+        tri.InsertBeforeHead(v2);
+        tri.InsertBeforeHead(v1);
+        tri.InsertBeforeHead(v3);
+        triList.add(tri);
+        System.out.println("v2.x:"+v2.v.x +" v2.y:"+ v2.v.y);
+        System.out.println("v1.x:"+v1.v.x +" v1.y:"+ v1.v.y);
+        System.out.println("v3.x:"+v3.v.x +" v3.y:"+ v3.v.y);
 	  
 	  /* Update earity of diagonal endpoints */
 	  v1.ear = Diagonal( v0, v3 );

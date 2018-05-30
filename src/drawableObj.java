@@ -5,6 +5,6 @@ import java.awt.*;
  */
 public interface drawableObj {
     public void drawResult(Graphics g);
-    public void initialise(cVertexList first, cVertexList second);
-    public boolean start();
+//    public void initialise(cVertexList first, cVertexList second);
+//    public boolean start();
 }
