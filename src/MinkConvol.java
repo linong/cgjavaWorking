@@ -5,7 +5,7 @@
  *---------------------------------------------------------------------------*/
 import java.awt.*;
 
-public class MinkConvol implements drawableObj {
+public class MinkConvol extends ADrawableObj {
 
   private cVertexList P, B;   /* list of vectors, list of the 2nd polygon */
   private cVertexList output; /* list capturing  the enlarged, resulting polygon */ 
@@ -42,7 +42,6 @@ public class MinkConvol implements drawableObj {
   //first, second initialized here for calling start
   public  void initialise(cVertexList a, cVertexList b)
   {
-
       first = a;
       second = b;
   }
@@ -56,27 +55,6 @@ public class MinkConvol implements drawableObj {
     drawList(g,output,Color.pink);
 
     System.out.println("the enlarged polygon has been drawn");
-  }
-
-  private void drawList(Graphics g, cVertexList list, Color color)
-  {
-    cVertex v1 = list.head;
-    cVertex v2;
-
-    do {
-      v2 = v1.next;
-      g.setColor(color);
-      if(P.n >= 2) {
-        g.drawLine(v1.v.x, v1.v.y, v2.v.x, v2.v.y);
-
-        g.drawString(v1.v.x+","+v1.v.y,v1.v.x,v1.v.y);
-      }
-      //g.fillOval(v1.v.x - (int)(w/2), v1.v.y - (int)(h/2), w, h);
-      // g.fillOval(v2.v.x - (int)(w/2), v2.v.y - (int)(h/2), w, h);
-      v1 = v1.next;
-    } while (v1 != list.head.prev);
-    g.drawLine(v1.v.x, v1.v.y, v1.next.v.x, v1.next.v.y);
-
   }
 
   public void test(){
@@ -133,6 +111,9 @@ public class MinkConvol implements drawableObj {
     return true;
   }
 
+    public cVertexList getMinkConvolResult(){
+        return output;
+    }
   private boolean CheckForConvexity(cVertexList A, cVertexList B)
   {
     if (A.Ccw() != 1)	

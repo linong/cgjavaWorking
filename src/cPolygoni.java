@@ -296,6 +296,15 @@ public class cPolygoni implements drawableObj, GetTriListInterface
 	earfound = false;
       diagdrawn = false;
     } /* end outer while loop */
+      if(n==3){
+
+          cVertexList tri = new cVertexList();
+          tri.InsertBeforeHead(listcopy.head.copyOf());
+          tri.InsertBeforeHead(listcopy.head.next.copyOf());
+          tri.InsertBeforeHead(listcopy.head.next.next.copyOf());
+          triList.add(tri);
+
+      }
   }
   
   /*---------------------------------------------------------------------
@@ -385,29 +394,6 @@ public class cPolygoni implements drawableObj, GetTriListInterface
     g.setColor(Color.red);
     g.fillOval((int)CG.x - (int)(w/2), (int)CG.y - (int)(h/2), w,h);
   }
-
-
-//    public void drawResult(Graphics g){
-//
-//        int w = 600;
-//        int h = 600;
-//        System.out.println("before drawing enlarged polygon, its vertices:");
-//        output.PrintVertices();
-//
-//        drawList(g,first,Color.black);
-//        drawList(g,second,Color.black);
-//        drawList(g,output,Color.pink);
-//
-//        System.out.println("the enlarged polygon has been drawn");
-//    }
-
-    public void initialise(cVertexList first, cVertexList second)
-    {
-
-
-
-    }
-
     public void drawResult(Graphics g)
     {
         drawPoly(g);

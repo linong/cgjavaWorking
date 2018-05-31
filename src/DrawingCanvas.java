@@ -38,7 +38,7 @@ public class DrawingCanvas extends JFrame {
     }
 
     protected void paint2D (Graphics2D g2) {
-        AffineTransform tform = AffineTransform.getTranslateInstance( CANVAS_WIDTH/2, CANVAS_HEIGHT/2);
+        AffineTransform tform = AffineTransform.getTranslateInstance( CANVAS_WIDTH/4, CANVAS_HEIGHT/4);
         tform.scale( 1, -1);    // NOTE -- to make 1.0 'full width'.
         g2.setTransform( tform);
     }
@@ -62,78 +62,113 @@ public class DrawingCanvas extends JFrame {
         }
     }
 
-    private static void testTri(){
-        System.out.println("test testTri");
-        cVertexList list = new cVertexList();
-        list.InsertBeforeHead(new cVertex(0,0));
-        list.InsertBeforeHead(new cVertex(10,7));
-        list.InsertBeforeHead(new cVertex(12,3));
-        list.InsertBeforeHead(new cVertex(20,8));
-        list.InsertBeforeHead(new cVertex(13,17));
-        list.InsertBeforeHead(new cVertex(10,12));
-        list.InsertBeforeHead(new cVertex(12,14));
-        list.InsertBeforeHead(new cVertex(14,9));
-        list.InsertBeforeHead(new cVertex(8,10));
-        list.InsertBeforeHead(new cVertex(6,14));
-        list.InsertBeforeHead(new cVertex(10,15));
-        list.InsertBeforeHead(new cVertex(7,20));
-        list.InsertBeforeHead(new cVertex(0,16));
-        list.InsertBeforeHead(new cVertex(1,13));
-        list.InsertBeforeHead(new cVertex(3,15));
-        list.InsertBeforeHead(new cVertex(5,8));
-        list.InsertBeforeHead(new cVertex(-2,9));
-        list.InsertBeforeHead(new cVertex(5,5));
 
-        cVertex head = list.head;
-        do{
-            head.multiWith(30);
-            head=head.next;
+
+    static class drawableVertexListList extends ADrawableObj{
+
+        List<cVertexList> triList;
+        drawableVertexListList(List<cVertexList> list){
+            triList = list;
         }
-        while(head!=list.head);
+        public void drawResult(Graphics g){
+            if(triList!=null){
+                for(cVertexList vl:triList){
+                    drawList(g,vl,Color.blue);
+                }
 
+            }
+        }
+    }
 
+    static class drawableVertexList extends ADrawableObj{
+
+        cVertexList triList;
+        Color m_color;
+        drawableVertexList(cVertexList list,Color color){
+            triList = list;
+            m_color = color;
+        }
+        public void drawResult(Graphics g){
+            if(triList!=null){
+                    drawList(g,triList,m_color);
+            }
+        }
+    }
+
+    private static List<cVertexList> triangulatePolygon(cVertexList list){
         cPolygoni polygoni = new cPolygoni(list);
         polygoni.start();
-
-        drawObjList.add(polygoni);
-
-        cVertexList second = new cVertexList();
-
-        second.InsertBeforeHead(new cVertex(0,0));
-        second.InsertBeforeHead(new cVertex(20,0));
-        second.InsertBeforeHead(new cVertex(20,20));
-        second.InsertBeforeHead(new cVertex(0,20));
-
         List<cVertexList> triList = polygoni.getTriList();
-        for (cVertexList l:triList
-             ) {
-            MinkConvol mink = new MinkConvol();
-            mink.initialise(l,second);
-            mink.start();
-            drawObjList.add(mink);
-        }
+        return triList;
+    }
+
+    private static void  getNFP(cVertexList P, cVertexList R){
+
+        List<cVertexList> triListP = triangulatePolygon(P);
+        drawableVertexListList drawableP = new drawableVertexListList(triListP);
+        drawObjList.add(drawableP);
+        List<cVertexList> triListR = triangulatePolygon(R);
+        drawableVertexListList drawableR = new drawableVertexListList(triListR);
+        drawObjList.add(drawableR);
+
+
+
+        List<Color> color_list = new ArrayList<Color>();
+
+        color_list.add(Color.yellow);
+        color_list.add(Color.green);
+        color_list.add(Color.cyan);
+        color_list.add(Color.black);
+        int i = 0;
+        //for (cVertexList p:triListP) {
+            //for(cVertexList r:triListR) {
+                MinkConvol mink = new MinkConvol();
+                mink.initialise(P, R);
+                mink.start();
+                cVertexList output = mink.getMinkConvolResult();
+
+                drawObjList.add(new drawableVertexList(output,color_list.get(i)));
+                i=(++i)%3;
+                //drawObjList.add(mink);
+            //}
+        //}
 
     }
 
+    private static cVertexList initSqureList(){
+        cVertexList list = new cVertexList();
+        list.InsertBeforeHead(new cVertex(0,0));
+        list.InsertBeforeHead(new cVertex(30,0));
+        list.InsertBeforeHead(new cVertex(30,30));
+        list.InsertBeforeHead(new cVertex(0,30));
+        cVertex head = list.head;
+        do{
+            head.multiWith(10);
+            head=head.next;
+        }
+        while(head!=list.head);
+        return list;
+    }
 
-    private static void test1()
-    {
+    private static cVertexList initSqureList2(){
+        cVertexList list = new cVertexList();
+        //list.InsertBeforeHead(new cVertex(1,1));
+        list.InsertBeforeHead(new cVertex(20,0));
+
+        list.InsertBeforeHead(new cVertex(20,20));
+        list.InsertBeforeHead(new cVertex(0,20));
+
+
+        return list;
+    }
+
+
+    private static void test1()    {
         MinkConvol mc = new MinkConvol();
-        cVertexList first = new cVertexList();
-        first.InsertBeforeHead( new cVertex(0,0));
-        first.InsertBeforeHead(new cVertex(100,100));
-        first.InsertBeforeHead(new cVertex(0,200));
-        first.InsertBeforeHead(new cVertex(-100,100));
-        //first.InsertBeforeHead(new cVertex(20,120));
 
-        cVertexList second = new cVertexList();
-
-        second.InsertBeforeHead(new cVertex(0,0));
-        second.InsertBeforeHead(new cVertex(20,0));
-        second.InsertBeforeHead(new cVertex(20,20));
-        second.InsertBeforeHead(new cVertex(0,20));
-        mc.initialise(first,second);
+        mc.initialise(initSqureList(),initSqureList2());
         mc.start();
+        drawObjList.add(mc);
 
     }
     private static void test2()
@@ -151,16 +186,39 @@ public class DrawingCanvas extends JFrame {
 
         second.InsertBeforeHead(new cVertex(0,0));
         second.InsertBeforeHead(new cVertex(20,0));
-        second.InsertBeforeHead(new cVertex(20,20));
+        //second.InsertBeforeHead(new cVertex(20,20));
         second.InsertBeforeHead(new cVertex(0,20));
 
         mc.initialise(first,second);
         mc.start();
+        drawObjList.add(mc);
+
+    }
+
+    private static void testTri(){
+        System.out.println("test testTri");
+
+
+
+        cVertexList list = initSqureList();
+        cVertexList second =initSqureList2();
+
+        getNFP(list,second);
+
+        //List<cVertexList> triList = polygoni.getTriList();
+//        for (cVertexList l:triList
+//             ) {
+//            MinkConvol mink = new MinkConvol();
+//            mink.initialise(l,second);
+//            mink.start();
+//            drawObjList.add(mink);
+//        }
 
     }
     public static void main(String[] args) {
 
-        testTri();
+        //testTri();
+        test1();
 
         // Run the GUI codes on the Event-Dispatching thread for thread safety
         SwingUtilities.invokeLater(new Runnable() {
