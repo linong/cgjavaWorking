@@ -11,7 +11,7 @@ import java.util.List;
 
 /** Custom Drawing Code Template */
 // A Swing application extends javax.swing.JFrame
-public class drawingCanvas extends JFrame {
+public class DrawingCanvas extends JFrame {
     // Define constants
     public static final int CANVAS_WIDTH  = 1800;
     public static final int CANVAS_HEIGHT = 1600;
@@ -22,7 +22,7 @@ public class drawingCanvas extends JFrame {
     static private List<drawableObj> drawObjList = new ArrayList<drawableObj>();
 
     // Constructor to set up the GUI components and event handlers
-    public drawingCanvas() {
+    public DrawingCanvas() {
         canvas = new DrawCanvas();    // Construct the drawing canvas
         canvas.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
 
@@ -164,7 +164,7 @@ public class drawingCanvas extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new drawingCanvas(); // Let the constructor do the job
+                new DrawingCanvas(); // Let the constructor do the job
             }
         });
     }
