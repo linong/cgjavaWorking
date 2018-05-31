@@ -13,8 +13,8 @@ import java.util.List;
 // A Swing application extends javax.swing.JFrame
 public class drawingCanvas extends JFrame {
     // Define constants
-    public static final int CANVAS_WIDTH  = 800;
-    public static final int CANVAS_HEIGHT = 600;
+    public static final int CANVAS_WIDTH  = 1800;
+    public static final int CANVAS_HEIGHT = 1600;
 
     // Declare an instance of the drawing canvas,
     // which is an inner class called DrawCanvas extending javax.swing.JPanel.
@@ -84,7 +84,7 @@ public class drawingCanvas extends JFrame {
 
         cVertex head = list.head;
         do{
-            head.multiWith(10);
+            head.multiWith(30);
             head=head.next;
         }
         while(head!=list.head);
