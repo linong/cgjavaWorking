@@ -16,6 +16,8 @@ public class DrawingCanvas extends JFrame {
     public static final int CANVAS_WIDTH  = 1800;
     public static final int CANVAS_HEIGHT = 1600;
 
+    
+
     // Declare an instance of the drawing canvas,
     // which is an inner class called DrawCanvas extending javax.swing.JPanel.
     private DrawCanvas canvas;
