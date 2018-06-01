@@ -25,9 +25,9 @@ public abstract class ADrawableObj implements drawableObj {
         } while (v1 != list.head.prev);
         g.drawLine(v1.v.x+randomInt(), v1.v.y+randomInt(), v1.next.v.x+randomInt(), v1.next.v.y+randomInt());
     }
+    static Random r = new Random(123);
 
-    private int randomInt(){
-        Random r = new Random(123456);
+    private static int randomInt(){
         return r.nextInt(2)-1;
 
     }

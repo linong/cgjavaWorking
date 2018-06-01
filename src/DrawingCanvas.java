@@ -61,9 +61,6 @@ public class DrawingCanvas extends JFrame {
             }
         }
     }
-
-
-
     static class drawableVertexListList extends ADrawableObj{
 
         List<cVertexList> triList;
@@ -79,7 +76,6 @@ public class DrawingCanvas extends JFrame {
             }
         }
     }
-
     static class drawableVertexList extends ADrawableObj{
 
         cVertexList triList;
@@ -120,41 +116,41 @@ public class DrawingCanvas extends JFrame {
         color_list.add(Color.cyan);
         color_list.add(Color.black);
         int i = 0;
-        //for (cVertexList p:triListP) {
-            //for(cVertexList r:triListR) {
+        for (cVertexList p:triListP) {
+            for(cVertexList r:triListR) {
                 MinkConvol mink = new MinkConvol();
-                mink.initialise(P, R);
+                mink.initialise(p, r);
                 mink.start();
                 cVertexList output = mink.getMinkConvolResult();
 
                 drawObjList.add(new drawableVertexList(output,color_list.get(i)));
                 i=(++i)%3;
-                //drawObjList.add(mink);
-            //}
-        //}
+                drawObjList.add(mink);
+            }
+        }
 
     }
 
     private static cVertexList initSqureList(){
         cVertexList list = new cVertexList();
         list.InsertBeforeHead(new cVertex(0,0));
-        list.InsertBeforeHead(new cVertex(30,0));
-        list.InsertBeforeHead(new cVertex(30,30));
-        list.InsertBeforeHead(new cVertex(0,30));
-        cVertex head = list.head;
-        do{
-            head.multiWith(10);
-            head=head.next;
-        }
-        while(head!=list.head);
+        list.InsertBeforeHead(new cVertex(100,0));
+        list.InsertBeforeHead(new cVertex(100,100));
+        list.InsertBeforeHead(new cVertex(0,100));
+//        cVertex head = list.head;
+//        do{
+//            head.multiWith(10);
+//            head=head.next;
+//        }
+//        while(head!=list.head);
         return list;
     }
 
     private static cVertexList initSqureList2(){
         cVertexList list = new cVertexList();
-        //list.InsertBeforeHead(new cVertex(1,1));
-        list.InsertBeforeHead(new cVertex(20,0));
 
+        list.InsertBeforeHead(new cVertex(0,0));
+        list.InsertBeforeHead(new cVertex(20,0));
         list.InsertBeforeHead(new cVertex(20,20));
         list.InsertBeforeHead(new cVertex(0,20));
 
@@ -197,9 +193,6 @@ public class DrawingCanvas extends JFrame {
 
     private static void testTri(){
         System.out.println("test testTri");
-
-
-
         cVertexList list = initSqureList();
         cVertexList second =initSqureList2();
 
@@ -217,8 +210,8 @@ public class DrawingCanvas extends JFrame {
     }
     public static void main(String[] args) {
 
-        //testTri();
-        test1();
+        testTri();
+        //test1();
 
         // Run the GUI codes on the Event-Dispatching thread for thread safety
         SwingUtilities.invokeLater(new Runnable() {

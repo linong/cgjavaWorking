@@ -140,7 +140,10 @@ public class MinkConvol extends ADrawableObj {
       v = v.next;
     } while ( v != P.head );
 
-    v = B.head;
+
+      B.ReverseList();
+
+      v = B.head;
     do {
       cVertex temp = new cVertex(v.v.x, v.v.y);
       P.InsertBeforeHead(temp);
@@ -156,6 +159,7 @@ public class MinkConvol extends ADrawableObj {
       v.mark = false;
       v = v.next;
     } while ( v != P.head );
+
 
    int xmin, ymin, xmax, ymax;     /* Primary min & max */
    int sxmin, symin, sxmax, symax; /* Secondary min & max */
