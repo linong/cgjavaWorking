@@ -6,6 +6,8 @@
 import java.awt.*;       // Using AWT's Graphics and Color
 import java.awt.geom.AffineTransform;
 import javax.swing.*;    // Using Swing's components and containers
+import java.awt.geom.Area;
+import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,7 +93,23 @@ public class DrawingCanvas extends JFrame {
         }
     }
 
+    static class drawablePolygon extends ADrawableObj{
+
+        Polygon m_p;
+
+        drawablePolygon(Polygon polygon){
+            m_p = polygon;
+        }
+        public void drawResult(Graphics g){
+            if(m_p!=null){
+                g.drawPolygon(m_p);
+
+            }
+        }
+    }
+
     private static List<cVertexList> triangulatePolygon(cVertexList list){
+
         cPolygoni polygoni = new cPolygoni(list);
         polygoni.start();
         List<cVertexList> triList = polygoni.getTriList();
@@ -100,14 +118,28 @@ public class DrawingCanvas extends JFrame {
 
     private static void  getNFP(cVertexList P, cVertexList R){
 
-        List<cVertexList> triListP = triangulatePolygon(P);
-        drawableVertexListList drawableP = new drawableVertexListList(triListP);
-        drawObjList.add(drawableP);
-        List<cVertexList> triListR = triangulatePolygon(R);
-        drawableVertexListList drawableR = new drawableVertexListList(triListR);
-        drawObjList.add(drawableR);
+        List<cVertexList> triListP = null;
+        if(P.CheckForConvexity()) {
+            triListP = new ArrayList<cVertexList>();
+            triListP.add(P);
+        }
+        else {
+            triListP = triangulatePolygon(P);
+        }
+        List<cVertexList> triListR = null;
+        if(R.CheckForConvexity()) {
 
-
+            triListR = new ArrayList<cVertexList>();
+            triListR.add(R);
+        }
+        else
+        {
+            triListR = triangulatePolygon(R);
+        }
+        //drawableVertexListList drawableP = new drawableVertexListList(triListP);
+        //drawableVertexListList drawableR = new drawableVertexListList(triListR);
+        //drawObjList.add(drawableP);
+        //drawObjList.add(drawableR);
 
         List<Color> color_list = new ArrayList<Color>();
 
@@ -116,34 +148,54 @@ public class DrawingCanvas extends JFrame {
         color_list.add(Color.cyan);
         color_list.add(Color.black);
         int i = 0;
+
+        //List<Shape> shapes = ....
+        Path2D path = new Path2D.Float();
+//        for (Shape shape : shapes) {
+//            path.append(shape, false);
+//        }
+        //Area compound = new Area(path);
+
         for (cVertexList p:triListP) {
             for(cVertexList r:triListR) {
                 MinkConvol mink = new MinkConvol();
                 mink.initialise(p, r);
                 mink.start();
                 cVertexList output = mink.getMinkConvolResult();
+//                Polygon polygon = new Polygon();
+//                cVertex v = output.head;
+//                do{
+//                    polygon.addPoint(v.v.x,v.v.y);
+//                    v=v.next;
+//                }
+//                while(output.head!=v);
+//                path.append(polygon,false);
+
 
                 drawObjList.add(new drawableVertexList(output,color_list.get(i)));
                 i=(++i)%3;
-                drawObjList.add(mink);
+                //drawObjList.add(mink);
             }
         }
+
 
     }
 
     private static cVertexList initSqureList(){
-        cVertexList list = new cVertexList();
-        list.InsertBeforeHead(new cVertex(0,0));
-        list.InsertBeforeHead(new cVertex(100,0));
-        list.InsertBeforeHead(new cVertex(100,100));
-        list.InsertBeforeHead(new cVertex(0,100));
+
+        cVertexList first = new cVertexList();
+        first.InsertBeforeHead( new cVertex(0,0));
+        first.InsertBeforeHead(new cVertex(100,100));
+        first.InsertBeforeHead(new cVertex(0,200));
+        first.InsertBeforeHead(new cVertex(-100,100));
+        first.InsertBeforeHead(new cVertex(20,120));
 //        cVertex head = list.head;
 //        do{
 //            head.multiWith(10);
 //            head=head.next;
 //        }
 //        while(head!=list.head);
-        return list;
+        return first;
     }
 
     private static cVertexList initSqureList2(){
