@@ -52,6 +52,7 @@ public class cPolygoni implements drawableObj, GetTriListInterface
         return triList;
     }
 
+
   public cPolygoni(cVertexList list)
   {
       init(list);
@@ -271,9 +272,9 @@ public class cPolygoni implements drawableObj, GetTriListInterface
         tri.InsertBeforeHead(v1.copyOf());
         tri.InsertBeforeHead(v3.copyOf());
         triList.add(tri);
-        System.out.println("v2.x:"+v2.v.x +" v2.y:"+ v2.v.y);
-        System.out.println("v1.x:"+v1.v.x +" v1.y:"+ v1.v.y);
-        System.out.println("v3.x:"+v3.v.x +" v3.y:"+ v3.v.y);
+//        System.out.println("v2.x:"+v2.v.x +" v2.y:"+ v2.v.y);
+//        System.out.println("v1.x:"+v1.v.x +" v1.y:"+ v1.v.y);
+//        System.out.println("v3.x:"+v3.v.x +" v3.y:"+ v3.v.y);
 	  
 	  /* Update earity of diagonal endpoints */
 	  v1.ear = Diagonal( v0, v3 );

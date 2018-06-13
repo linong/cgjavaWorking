@@ -156,13 +156,13 @@ class cVertexList {
   }
     /*Makes a copy of present list
  */
-    public void deepCopy(cVertexList list)
+    public cVertexList deepCopy(int x,int y)
     {
-
+        cVertexList list = new cVertexList();
         cVertex temp1 = head, temp2;
         do {
             temp2 = new cVertex(); // Create a new vertex cell
-            temp2.v =  new cPointi(temp1.v.x,temp1.v.y);     // Fill it with the same cPointi as in list
+            temp2.v =  new cPointi(temp1.v.x+x,temp1.v.y+y);     // Fill it with the same cPointi as in list
             temp2.mark = temp1.mark;
             temp2.ear = temp1.ear;
             temp2.duplicate = temp1.duplicate;
@@ -171,7 +171,13 @@ class cVertexList {
             list.InsertBeforeHead( temp2 );
             temp1 = temp1.next;
         } while (temp1 != head);
+
+        return list;
     }
+    public cVertexList deepCopy(){
+        return deepCopy(0,0);
+    }
+
 
   /* Reverses the vertices, in order to get a ccw orientation	
    * 1234 becomes 1432

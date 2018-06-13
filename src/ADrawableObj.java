@@ -17,7 +17,8 @@ public abstract class ADrawableObj implements drawableObj {
             v2 = v1.next;
             g.setColor(color);
              g.drawLine(v1.v.x+randomInt(), v1.v.y+randomInt(), v2.v.x+randomInt(), v2.v.y+randomInt());
-             g.drawString(v1.v.x+","+v1.v.y,v1.v.x,v1.v.y);
+            Graphics2D g2d = (Graphics2D)g ;
+            // g.drawString(v1.v.x+","+v1.v.y,v1.v.x,v1.v.y);
 
             //g.fillOval(v1.v.x - (int)(w/2), v1.v.y - (int)(h/2), w, h);
             // g.fillOval(v2.v.x - (int)(w/2), v2.v.y - (int)(h/2), w, h);

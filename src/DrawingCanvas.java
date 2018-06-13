@@ -6,10 +6,8 @@
 import java.awt.*;       // Using AWT's Graphics and Color
 import java.awt.geom.*;
 import javax.swing.*;    // Using Swing's components and containers
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 /** Custom Drawing Code Template */
 // A Swing application extends javax.swing.JFrame
@@ -37,7 +35,7 @@ public class DrawingCanvas extends JFrame {
         setTitle("......");  // "super" JFrame sets the title
         setVisible(true);    // "super" JFrame show
 
-        tform.setToTranslation(CANVAS_WIDTH/2,CANVAS_HEIGHT/2);
+        tform.setToTranslation(CANVAS_WIDTH/2-300,CANVAS_HEIGHT/2);
         tform.scale( 0.8, -0.8);    // NOTE -- to make 1.0 'full width'.
     }
 
@@ -125,11 +123,15 @@ public class DrawingCanvas extends JFrame {
         }
     }
 
+    static Map<cVertexList, List<cVertexList>> triangulateMap = new HashMap<cVertexList, List<cVertexList>>();
+
+
     private static List<cVertexList> triangulatePolygon(cVertexList list){
 
         cPolygoni polygoni = new cPolygoni(list);
         polygoni.start();
         List<cVertexList> triList = polygoni.getTriList();
+        triangulateMap.put(list,triList);
         return triList;
     }
 
@@ -174,6 +176,11 @@ public class DrawingCanvas extends JFrame {
         //Area compound = new Area(path);
 
         NFPPolygon nfpPolygon = new NFPPolygon();
+        return getNFPofTriList(nfpPolygon,triListP,triListR);
+
+    }
+
+    private static NFPPolygon getNFPofTriList(NFPPolygon nfpPolygon,List<cVertexList> triListP, List<cVertexList> triListR) {
 
         for (cVertexList p:triListP) {
             for(cVertexList r:triListR) {
@@ -183,17 +190,19 @@ public class DrawingCanvas extends JFrame {
                 cVertexList output = mink.getMinkConvolResult();
                 nfpPolygon.add(output);
                 //drawObjList.add(new drawableVertexList(output,color_list.get(i)));
-                i=(++i)%3;
+                //i=(++i)%3;
                 //drawObjList.add(mink);
             }
         }
+
         return nfpPolygon;
+
     }
 
     private static cVertexList initSqureList(){
 
         cVertexList first = new cVertexList();
-        first.InsertBeforeHead( new cVertex(0,0));
+        first.InsertBeforeHead(new cVertex(0,0));
         first.InsertBeforeHead(new cVertex(30,40));
         first.InsertBeforeHead(new cVertex(40,20));
         first.InsertBeforeHead(new cVertex(50,40));
@@ -268,13 +277,63 @@ public class DrawingCanvas extends JFrame {
 
     private static cVertexList initHungryCat(){
         cVertexList list = new cVertexList();
-
-        list.InsertBeforeHead(new cVertex(0,0));
-        list.InsertBeforeHead(new cVertex(20,20));
-        list.InsertBeforeHead(new cVertex(60,100));
-        list.InsertBeforeHead(new cVertex(22,100));
-
-
+        list.InsertBeforeHead(new cVertex(63,0));
+        list.InsertBeforeHead(new cVertex(52,8));
+        list.InsertBeforeHead(new cVertex(43,19));
+        list.InsertBeforeHead(new cVertex(38,31));
+        list.InsertBeforeHead(new cVertex(36,44));
+        list.InsertBeforeHead(new cVertex(34,44));
+        list.InsertBeforeHead(new cVertex(34,241));
+        list.InsertBeforeHead(new cVertex(0,251));
+        list.InsertBeforeHead(new cVertex(0,572));
+        list.InsertBeforeHead(new cVertex(34,582));
+        list.InsertBeforeHead(new cVertex(34,779));
+        list.InsertBeforeHead(new cVertex(35,779));
+        list.InsertBeforeHead(new cVertex(38,792));
+        list.InsertBeforeHead(new cVertex(43,804));
+        list.InsertBeforeHead(new cVertex(52,815));
+        list.InsertBeforeHead(new cVertex(63,823));
+        list.InsertBeforeHead(new cVertex(232,823));
+        list.InsertBeforeHead(new cVertex(243,815));
+        list.InsertBeforeHead(new cVertex(252,804));
+        list.InsertBeforeHead(new cVertex(257,792));
+        list.InsertBeforeHead(new cVertex(259,779));
+        list.InsertBeforeHead(new cVertex(261,779));
+        list.InsertBeforeHead(new cVertex(261,582));
+        list.InsertBeforeHead(new cVertex(268,589));
+        list.InsertBeforeHead(new cVertex(272,667));
+        list.InsertBeforeHead(new cVertex(434,667));
+        list.InsertBeforeHead(new cVertex(451,601));
+        list.InsertBeforeHead(new cVertex(457,596));
+        list.InsertBeforeHead(new cVertex(457,582));
+        list.InsertBeforeHead(new cVertex(688,582));
+        list.InsertBeforeHead(new cVertex(688,596));
+        list.InsertBeforeHead(new cVertex(694,601));
+        list.InsertBeforeHead(new cVertex(711,667));
+        list.InsertBeforeHead(new cVertex(872,667));
+        list.InsertBeforeHead(new cVertex(876,589));
+        list.InsertBeforeHead(new cVertex(883,582));
+        list.InsertBeforeHead(new cVertex(883,241));
+        list.InsertBeforeHead(new cVertex(876,234));
+        list.InsertBeforeHead(new cVertex(872,156));
+        list.InsertBeforeHead(new cVertex(711,156));
+        list.InsertBeforeHead(new cVertex(694,222));
+        list.InsertBeforeHead(new cVertex(688,227));
+        list.InsertBeforeHead(new cVertex(688,241));
+        list.InsertBeforeHead(new cVertex(457,241));
+        list.InsertBeforeHead(new cVertex(457,227));
+        list.InsertBeforeHead(new cVertex(451,222));
+        list.InsertBeforeHead(new cVertex(434,156));
+        list.InsertBeforeHead(new cVertex(272,156));
+        list.InsertBeforeHead(new cVertex(268,234));
+        list.InsertBeforeHead(new cVertex(261,241));
+        list.InsertBeforeHead(new cVertex(261,44));
+        list.InsertBeforeHead(new cVertex(259,44));
+        list.InsertBeforeHead(new cVertex(257,31));
+        list.InsertBeforeHead(new cVertex(252,19));
+        list.InsertBeforeHead(new cVertex(243,8));
+        list.InsertBeforeHead(new cVertex(232,0));
+        list.ReverseList();
 
 //        first.InsertBeforeHead( new cVertex(0,0));
 //        first.InsertBeforeHead(new cVertex(100,100));
@@ -326,9 +385,7 @@ public class DrawingCanvas extends JFrame {
     }
 
     private static cVertexList rotatecVertexList(cVertexList list) {
-        cVertexList rotatedList = new cVertexList();
-        list.deepCopy(rotatedList);
-
+        cVertexList rotatedList = list.deepCopy();
         int minx= Integer.MAX_VALUE;
         int miny= Integer.MAX_VALUE;
         int maxx= Integer.MIN_VALUE;
@@ -361,11 +418,6 @@ public class DrawingCanvas extends JFrame {
 
         return rotatedList;
     }
-
-
-
-
-
 
     private static void test1()    {
         MinkConvol mc = new MinkConvol();
@@ -465,31 +517,112 @@ public class DrawingCanvas extends JFrame {
 
 
     private static cVertexList movePolygon(cVertexList list, Point point){
-        cVertexList listcopy = new cVertexList();
-        list.deepCopy(listcopy);
-        cVertexList polygonBottomLeft = addPolygon(listcopy,point.x,point.y);
+        cVertexList listcopy = list.deepCopy(point.x,point.y);
         return listcopy;
     }
 
 
+    static class TriangulatedPolygonUnion {
+        cVertexList m_A;
+        cVertexList m_B;
+        List<cVertexList> m_triA;
+        List<cVertexList> m_triB;
+        private Point m_pA;
+        private Point m_pB;
+
+        public TriangulatedPolygonUnion(cVertexList A,cVertexList B, List<cVertexList> triA, List<cVertexList> triB){
+            m_A = A;
+            m_B = B;
+            m_triA = triA;
+            m_triB = triB;
+        }
+        //we do not move points in Polygon(I'm thinking the polygon will be used elsewhere), but move the triangles(use them to calculate NFP of Union)
+        public void moveItems(Point pA, Point pB){
+            if(pA.x!=0 || pA.y!=0){
+                m_pA = (Point)pA.clone();
+                List<cVertexList> tl = new ArrayList<cVertexList>();
+                for(cVertexList t:m_triA){
+                    tl.add(t.deepCopy(pA.x,pA.y));
+                }
+                m_triA = tl;
+            }
+            if(pB.x!=0 || pB.y!=0){
+                m_pB = (Point)pB.clone();
+                List<cVertexList> tl = new ArrayList<cVertexList>();
+                m_triB = new ArrayList<cVertexList>();
+                for(cVertexList t: m_triB){
+                    tl.add(t.deepCopy(pB.x,pB.y));
+                }
+                m_triB = tl;
+            }
+        }
+        public Point getpA() {
+            return (Point)m_pA.clone();
+        }
+
+        public Point getpB() {
+            return (Point)m_pB.clone();
+        }
+
+        public NFPPolygon getNFPofTriLists() {
+
+            NFPPolygon nfpPolygon = new NFPPolygon();
+            getNFPofTriList(nfpPolygon,m_triA,m_triA);
+            getNFPofTriList(nfpPolygon,m_triA,m_triB);
+            getNFPofTriList(nfpPolygon,m_triB,m_triB);
+            getNFPofTriList(nfpPolygon,m_triB,m_triA);
+            return nfpPolygon;
+        }
+    }
+
+
+    private static void initTest(){
+
+       // cVertexList list = initHungryCat1();
+        cVertexList list = initSqureList3();
+
+        cVertexList rotatedList = rotatecVertexList(list);
+
+        twoD = new HashMap<cVertexList, Map<cVertexList, NFPPolygon>>();
+
+        Map<cVertexList,NFPPolygon> map = new HashMap<cVertexList, NFPPolygon>();
+        NFPPolygon nfpPolygon = getNFP(rotatedList,list);
+        map.put(list,nfpPolygon);
+        nfpPolygon = getNFP(rotatedList,rotatedList);
+        map.put(rotatedList,nfpPolygon);
+        twoD.put(rotatedList,map);
+
+        map = new HashMap<cVertexList, NFPPolygon>();
+        nfpPolygon = getNFP(list,rotatedList);
+        map.put(rotatedList,nfpPolygon);
+        nfpPolygon = getNFP(list,list);
+        map.put(list,nfpPolygon);
+        twoD.put(list,map);
+
+    }
     private static void testTri(){
         System.out.println("test testTri");
-        //cVertexList list = initSqureList();
-        cVertexList list = initHungryCat1();
-        cVertexList rotatedlist = rotatecVertexList(list);
-        cVertexList second =initSqureList2();
+        initTest();
 
-        NFPPolygon nfpPolygon = getNFP(rotatedlist,list);
-        Area area = nfpPolygon.getUnion();
-        drawObjList.add(new DrawableArea(nfpPolygon.getUnion()));
+        cVertexList lA[] = twoD.keySet().toArray(new cVertexList[0]);
+        cVertexList A = lA[1];
+        cVertexList B = lA[0];
 
+        NFPPolygon polygonAB = twoD.get(A).get(B);
+        Area area = polygonAB.getUnion();
+
+        AffineTransform af = AffineTransform.getTranslateInstance(2000,0);
+        //twoD.get(A).get(A).getUnion().transform(af);
+        //drawObjList.add(new DrawableArea(twoD.get(A).get(A).getUnion()));
+
+        //drawObjList.add(new DrawableArea(twoD.get(B).get(B).getUnion()));
 
         // Note: we're storing double[] and not Point2D.Double
         ArrayList<double[]> areaPoints = new ArrayList<double[]>();
         double[] coords = new double[6];
 
-        for (PathIterator pi = area.getPathIterator(null); !pi.isDone(); pi.next()) {
 
+        for (PathIterator pi = area.getPathIterator(null); !pi.isDone(); pi.next()) {
             // Because the Area is composed of straight lines
             int type = pi.currentSegment(coords);
             // We record a double array of {segment type, x coord, y coord}
@@ -498,53 +631,96 @@ public class DrawingCanvas extends JFrame {
         }
 
 
+        //draw the polygonAB around the nfp area
+//        ArrayList<Line2D.Double > areaSegments = new ArrayList<Line2D.Double>();
+//        double[] start = new double[3]; // To record where each polygonAB starts
+//        for (int i = 0; i < areaPoints.size(); i++) {
+//            // If we're not on the last point, return a line from this point to the next
+//            double[] currentElement = areaPoints.get(i);
+//
+//            // We need a default value in case we've reached the end of the ArrayList
+//            double[] nextElement = {-1, -1, -1};
+//            if (i < areaPoints.size() - 1) {
+//                nextElement = areaPoints.get(i + 1);
+//            }
+//
+//            // Make the lines
+//            if (currentElement[0] == PathIterator.SEG_MOVETO) {
+//                start = currentElement; // Record where the polygonAB started to close it later
+//            }
+//
+//            if (nextElement[0] == PathIterator.SEG_LINETO) {
+//                areaSegments.add(
+//                        new Line2D.Double(
+//                                currentElement[1], currentElement[2],
+//                                nextElement[1], nextElement[2]
+//                        )
+//                );
+//            } else if (nextElement[0] == PathIterator.SEG_CLOSE) {
+//                areaSegments.add(
+//                        new Line2D.Double(
+//                                currentElement[1], currentElement[2],
+//                                start[1], start[2]
+//                        )
+//                );
+//            }
+//        }
+//        cVertexList lines = new cVertexList();
+//        for (Line2D.Double line:areaSegments
+//             ) {
+//            lines.InsertBeforeHead(new cVertex((int)line.getX1(),(int)line.getY1()));
+//        }
+//
+//        drawObjList.add(new drawableVertexList(lines,Color.RED));
+
         List<cVertexList> pList = new ArrayList<cVertexList>();
         Rectangle2D b = area.getBounds2D();
 
+        NFPPolygon polygonAA = twoD.get(A).get(A);
 
-        pList.add(movePolygon(list,new Point((int)b.getMaxX(),0)));
-        pList.add(movePolygon(list,new Point((int)b.getMinX(),0)));
+        //offset of AA
+        int offSetAA = (int)polygonAA.getBounds().getMaxX();
 
-//
+        //pList.add(movePolygon(A,new Point(offSetAA,0)));
+
         Point point = getOffsetPoint(areaPoints,new BottomLeft());
-//        cVertexList polygonBL = movePolygon(list,point);
-//        pList.add(polygonBL);
+        cVertexList polygonBL = movePolygon(B,point);
+        //pList.add(polygonBL);
 
-        point = getOffsetPoint(areaPoints,new BottomRight());
-        cVertexList polygonBR = movePolygon(list,point);
-        pList.add(polygonBR);
+        cVertexList polygonBL1 = movePolygon(polygonBL,new Point(offSetAA,0));
+        //pList.add(polygonBL1);
 
-        point = getOffsetPoint(areaPoints,new UpperRight());
-        cVertexList polygonUR = movePolygon(list,point);
-        pList.add(polygonUR);
 
-        pList.add(list);
+        TriangulatedPolygonUnion triangulatedPolygonUnion = new TriangulatedPolygonUnion(A,B,triangulateMap.get(A),triangulateMap.get(B));
+
+        triangulatedPolygonUnion.moveItems(new Point(-point.x,-point.y),new Point(0,0));
+        cVertexList A1 = movePolygon(A,new Point(-point.x,-point.y));
+       // pList.add(A1);
+        pList.add(B);
+//        pList.add(A);
+        //pList.add(polygonBL);
+        NFPPolygon np = triangulatedPolygonUnion.getNFPofTriLists();
+        drawObjList.add(new DrawableArea(np.getUnion()));
+
+
+//        point = getOffsetPoint(areaPoints,new BottomRight());
+//        cVertexList polygonBR = movePolygon(list,point);
+//        pList.add(polygonBR);
+
+
+//        point = getOffsetPoint(areaPoints,new UpperLeft());
+//        cVertexList polygonUL = movePolygon(B,point);
+//        pList.add(polygonUL);
+
+
+//        point = getOffsetPoint(areaPoints,new UpperRight());
+//        cVertexList polygonUR = movePolygon(list,point);
+//        pList.add(polygonUR);
+
+       // pList.add(A);
         for (cVertexList p: pList ) {
             drawObjList.add(new drawableVertexList(p, Color.black));
         }
-//        drawObjList.add(new drawableVertexList(list, Color.black));
-//        drawObjList.add(new drawableVertexList(polygonBL, Color.black));
-//        drawObjList.add(new drawableVertexList(polygonBR, Color.black));
-//        drawObjList.add(new drawableVertexList(polygonUR, Color.black));
-
-
-//        twoD = new HashMap<cVertexList, Map<cVertexList, NFPPolygon>>();
-//
-//        Map<cVertexList,NFPPolygon> map = new HashMap<cVertexList, NFPPolygon>();
-//        map.put(list,nfpPolygon);
-//        twoD.put(second,map);
-
-
-
-
-        //List<cVertexList> triList = polygoni.getTriList();
-//        for (cVertexList l:triList
-//             ) {
-//            MinkConvol mink = new MinkConvol();
-//            mink.initialise(l,second);
-//            mink.start();
-//            drawObjList.add(mink);
-//        }
 
     }
     public static void main(String[] args) {

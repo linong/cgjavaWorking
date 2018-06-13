@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.geom.Area;
+import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
+import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +44,23 @@ public class NFPPolygon {
         union.add(new Area(triangle));
     }
 
+//    //need to be used after initialized
+//    public cVertexList getBoudingPolygon(){
+//        // Note: we're storing double[] and not Point2D.Double
+//        ArrayList<double[]> areaPoints = new ArrayList<double[]>();
+//        cVertexList boundingPolygong = new cVertexList();
+//        double[] coords = new double[6];
+//        for (PathIterator pi = union.getPathIterator(null); !pi.isDone(); pi.next()) {
+//            // Because the Area is composed of straight lines
+//            int type = pi.currentSegment(coords);
+//            // We record a double array of {segment type, x coord, y coord}
+//            double[] pathIteratorCoords = {type, coords[0], coords[1]};
+//            boundingPolygong.InsertBeforeHead(new cVertex((int)coords[0],(int)coords[1]));
+//            areaPoints.add(pathIteratorCoords);
+//        }
+//        return boundingPolygong;
+//    }
+
     public List<cVertexList> getList(){
         return NFPList;
     }
@@ -54,7 +73,7 @@ public class NFPPolygon {
 
 
 
-    //for neiborhood searching, two calculate the intersecion between horizontal line and NFP are.
+    //for neighborhood searching, calculate the intersection between horizontal line and NFP are.
 //    public int getVij(int rx,int ry, int px,int py){
 //        //quick check if r is outside the bounding box.
 //        if(rx<(px+boundsMinX)|| rx>(px+boundsMaxX)||ry<(py+boundsMinY)||ry>(py+boundsMaxY))
@@ -66,10 +85,6 @@ public class NFPPolygon {
 //            if(triangle.C)
 //
 //        }
-
-
-
-
  //   }
 
 }
