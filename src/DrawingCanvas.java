@@ -612,17 +612,17 @@ public class DrawingCanvas extends JFrame {
 
     private static void initTest(){
 
-        //cVertexList list = initHungryCat();
+        cVertexList list = initHungryCat();
         //cVertexList list = initSqureList3();
-        cVertexList list = initSqureList2();
+        //cVertexList list = initSqureList2();
         A = list;
 
         cVertexList rotatedList = rotatecVertexList(list);
         B = rotatedList;
 
-        cVertexList temp = B;
-        B=A;
-        A=temp;
+//        cVertexList temp = B;
+//        B=A;
+//        A=temp;
 
 
         twoD = new HashMap<cVertexList, Map<cVertexList, NFPPolygon>>();
@@ -644,10 +644,9 @@ public class DrawingCanvas extends JFrame {
     }
     private static void testTri(){
         System.out.println("test testTri");
-        scale = 1;
-        cVertexList temp = B;
-        B=A;
-        A=temp;
+        scale = 0.2;
+
+        long starttime = System.currentTimeMillis();
 
         initTest();
         NFPPolygon polygonAB = twoD.get(A).get(B);
@@ -682,23 +681,39 @@ public class DrawingCanvas extends JFrame {
         cVertexList C = movePolygon(A,pBBAA);
         cVertexList C1 = movePolygon(C,pBA);
 
-        //pList.add(C);
-        //pList.add(C1);
+        pList.add(C);
+        pList.add(C1);
         cVertexList B1 = movePolygon(B,pBA);
 
         pList.add(B);
-        //pList.add(B1);
+        pList.add(B1);
 
         cVertexList A2 = movePolygon(A1,pBA);
         //cVertexList A3 = movePolygon(A2,pBA);
         pList.add(A1);
-        //pList.add(A2);
+        pList.add(A2);
         //pList.add(A3);
         drawObjList.add(new DrawableArea(polygonAB.getUnion()));
 
         for (cVertexList p: pList ) {
             drawObjList.add(new drawableVertexList(p, Color.black));
         }
+
+
+
+        System.out.println("execution time:"+ (System.currentTimeMillis()-starttime));
+
+        Rectangle rA = A.getBoundingBox();
+        Rectangle rB = B.getBoundingBox();
+
+        int AreaAB = rA.height*rA.width + rB.height*rB.width;
+
+        int AreaNested1 = pBA.x*(-point.y)-(-point.x)*pBA.y;
+        int AreaNested2 = pBBAA.x*pBA.y-pBA.x*pBBAA.y;
+        double ratio = (AreaNested1+AreaNested2)/(double)AreaAB;
+
+        System.out.println("compress ratio is:" + ratio);
+
 
     }
     public static void main(String[] args) {
