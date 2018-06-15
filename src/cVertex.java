@@ -9,6 +9,7 @@ and ResetVertexTo3D (which raises a point onto a paraboloid).
 -------------------------------------------------------------------*/
 
 class cVertex {
+  private static boolean debug = false;
     
   cVertex prev, next;
   cPointi v;
@@ -25,6 +26,13 @@ class cVertex {
     duplicate = null;
     onhull = false;
     mark = false;
+  }
+
+
+  private void debug(String str){
+    if(debug)
+      System.out.print(str);
+
   }
 
   public cVertex copyOf(){
@@ -60,7 +68,7 @@ class cVertex {
   }
    
   public void PrintVertex(int index) {
-    System.out.print ( "V" + index + " = " );
+    debug ( "V" + index + " = " );
     v.PrintPoint();
   }
 
@@ -70,12 +78,12 @@ class cVertex {
 
   public void PrintVertex3D()
   {
-    System.out.print("V"+vnum+" = ("+ v.x + ", " + v.y + ", " + v.z+"); ");
+    debug("V"+vnum+" = ("+ v.x + ", " + v.y + ", " + v.z+"); ");
   }
 
   public void PrintVertex3D(int k)
   {
-    System.out.print("V"+k+" = ("+ v.x + ", " + v.y + ", " + v.z + "); ");
+    debug("V"+k+" = ("+ v.x + ", " + v.y + ", " + v.z + "); ");
   }
 } 
 

@@ -341,7 +341,7 @@ class cPointi {
 
   public void PrintPoint() 
   {
-    System.out.println ( " (" + x + "," + y + ")" );
+    //System.out.println ( " (" + x + "," + y + ")" );
   }
 }
 

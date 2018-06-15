@@ -22,7 +22,7 @@ class cDiagonal {
   }
   
   public void PrintDiagonal(int index) {
-    System.out.print ( "D" + index + " = " );
+    //System.out.print ( "D" + index + " = " );
     v1.PrintVertex();
     v2.PrintVertex();
   }

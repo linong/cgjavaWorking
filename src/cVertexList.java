@@ -26,6 +26,13 @@ class cVertexList {
     head = null;
     n = 0;
   }
+    private static boolean debug = false;
+
+    private void debug(String str){
+        if(debug)
+            System.out.print(str);
+
+    }
 
  public cVertex GetElement(int index)
  {
@@ -197,7 +204,7 @@ class cVertexList {
       InsertBeforeHead( temp2 );
       temp1 = temp1.prev;
     } while (temp1 != listcopy.head );
-    System.out.println("Reversing list...");
+    debug("Reversing list...");
   }
 
   /* Makes the last element to be the head and head to be the last, 
@@ -220,7 +227,7 @@ class cVertexList {
       InsertBeforeHead( temp2 );
       temp1 = temp1.prev;
     } while (temp1 != listcopy.head.prev );
-    System.out.println("Reversing list completely...");
+    debug("Reversing list completely...");
   }
 
   /* Returns the closest vertex to (x,y)
@@ -268,6 +275,25 @@ class cVertexList {
     }
     return notfound;
   }
+
+    public Rectangle getBoundingBox(){
+        cVertex p = head;
+        int minx = Integer.MAX_VALUE;
+        int miny = Integer.MAX_VALUE;
+        int maxx = Integer.MIN_VALUE;
+        int maxy = Integer.MIN_VALUE;
+        do{
+            minx = Math.min(minx,p.v.x);
+            miny = Math.min(miny,p.v.y);
+            maxx = Math.max(maxx,p.v.x);
+            maxy = Math.max(maxy,p.v.y);
+            p = p.next;
+
+        }
+        while (p!=head);
+
+        return new Rectangle(minx,miny,maxx-minx,maxy-miny);
+    }
 
   /*Returns nearest edge to (x,y) by returning prior vertex
    */
@@ -461,7 +487,7 @@ class cVertexList {
   public void PrintVertices3D()
   {
     cVertex temp = head;
-    System.out.println("Printing vertices...");
+    debug("Printing vertices...");
     if (head != null) {
       do {
 	temp.PrintVertex3D();
@@ -475,7 +501,7 @@ class cVertexList {
     cVertex v = head; 
     int i = 0;
     do {
-      System.out.println("V"+i+": primary="+v.mark+" | vnum="+v.vnum);
+      debug("V"+i+": primary="+v.mark+" | vnum="+v.vnum);
       v.v.PrintPoint();
       v = v.next; i++;
     } while ( v != head);
@@ -487,7 +513,7 @@ class cVertexList {
   {
     //vertex painting loop	  
     if (n == 0)
-      System.out.println("No drawing is possible.");
+      debug("No drawing is possible.");
     else {
       cVertex v = head;
       
@@ -549,7 +575,7 @@ class cVertexList {
   {
     //vertex painting loop	  
     if (head == null)
-      System.out.println("No drawing is possible.");
+      debug("No drawing is possible.");
     else {
       cVertex v1 = head;
       cVertex v2;

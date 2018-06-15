@@ -46,8 +46,14 @@ public class cPolygoni implements drawableObj, GetTriListInterface
                                         //when shooting the array in inPoly1
   private boolean diagdrawn = true;     //diag-s've been drawn after triang?
 
+    private static boolean debug = false;
     private List<cVertexList> triList = null;
 
+    private void debug(String str){
+        if(debug)
+            System.out.println(str);
+
+    }
     public List<cVertexList> getTriList(){
         return triList;
     }
@@ -79,7 +85,7 @@ public class cPolygoni implements drawableObj, GetTriListInterface
     intCount = 0;
     for (int i = 0; i < SCREENWIDTH; i++)
       inters[i] = 0;
-    //    System.out.println("Polygon cleared");
+    //    debug("Polygon cleared");
     diagdrawn = true;
       triList.clear();
     PrintPoly();
@@ -272,9 +278,9 @@ public class cPolygoni implements drawableObj, GetTriListInterface
         tri.InsertBeforeHead(v1.copyOf());
         tri.InsertBeforeHead(v3.copyOf());
         triList.add(tri);
-//        System.out.println("v2.x:"+v2.v.x +" v2.y:"+ v2.v.y);
-//        System.out.println("v1.x:"+v1.v.x +" v1.y:"+ v1.v.y);
-//        System.out.println("v3.x:"+v3.v.x +" v3.y:"+ v3.v.y);
+//        debug("v2.x:"+v2.v.x +" v2.y:"+ v2.v.y);
+//        debug("v1.x:"+v1.v.x +" v1.y:"+ v1.v.y);
+//        debug("v3.x:"+v3.v.x +" v3.y:"+ v3.v.y);
 	  
 	  /* Update earity of diagonal endpoints */
 	  v1.ear = Diagonal( v0, v3 );
@@ -290,7 +296,7 @@ public class cPolygoni implements drawableObj, GetTriListInterface
 	v2 = v2.next;
       } while ( v2 != listcopy.head );
       if (!earfound) {
-	System.out.println("Polygon is nonsimple: cannot triangulate");
+	debug("Polygon is nonsimple: cannot triangulate");
 	break;
       }
       else
@@ -363,10 +369,10 @@ public class cPolygoni implements drawableObj, GetTriListInterface
     cVertex v = list.head;
     int i=0;
     if (v == null)
-      System.out.println("Polygon is empty");
+      debug("Polygon is empty");
     else 
       do {
-	System.out.println("Vertex " + i + " (" + v.v.x + ", " + v.v.y + ")");
+	debug("Vertex " + i + " (" + v.v.x + ", " + v.v.y + ")");
 	i++;
 	v = v.next;
       } while (v != list.head);
@@ -405,7 +411,7 @@ public class cPolygoni implements drawableObj, GetTriListInterface
         cVertex v = list.head;
         int i=0;
         if (v == null)
-            System.out.println("Polygon is empty");
+            debug("Polygon is empty");
         else {
             do {
                 cVertex next = v.next;

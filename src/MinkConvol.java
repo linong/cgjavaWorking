@@ -18,6 +18,7 @@ public class MinkConvol extends ADrawableObj {
 
   private cVertexList first;
   private cVertexList second;
+    private static boolean debug = false;
 
   public static void main(String[] args){
     MinkConvol mc = new MinkConvol();
@@ -47,14 +48,14 @@ public class MinkConvol extends ADrawableObj {
   }
   public void drawResult(Graphics g){
 
-    System.out.println("before drawing enlarged polygon, its vertices:");
+    debug("before drawing enlarged polygon, its vertices:");
     output.PrintVertices();
 
     drawList(g,first,Color.black);
     drawList(g,second,Color.black);
     drawList(g,output,Color.pink);
 
-    System.out.println("the enlarged polygon has been drawn");
+    debug("the enlarged polygon has been drawn");
   }
 
   public void test(){
@@ -81,7 +82,7 @@ public class MinkConvol extends ADrawableObj {
     cVertexList q = second;
     p0.x = p0.y = 0;
     if (!CheckForConvexity(p,q)) {
-      System.out.println("Second polygon is  not convex...");
+      debug("Second polygon is  not convex...");
       return false;
     }
     else {
@@ -102,10 +103,10 @@ public class MinkConvol extends ADrawableObj {
       output = new cVertexList();
     }
     Vectorize();
-    System.out.println("Before sorting ...");
+    debug("Before sorting ...");
     PrintPoints();
     Qsort();
-    System.out.println("After sorting ... ");
+    debug("After sorting ... ");
     PrintPoints();
     Convolve();
     return true;
@@ -182,7 +183,7 @@ public class MinkConvol extends ADrawableObj {
      else if ( v.v.y < ymin ) ymin = v.v.y;
      v = v.next; i++;
    } while ( v != startB );
-   /*System.out.println("Index of upper rightmost primary, i=mp = "+mp);*/
+   /*debug("Index of upper rightmost primary, i=mp = "+mp);*/
    v = startB;
    sxmin = sxmax = v.v.x;
    symin = symax = v.v.y;
@@ -209,28 +210,28 @@ public class MinkConvol extends ADrawableObj {
        symin = v.v.y;
      v = v.next; i++;
    } while ( v != P.head );
-   /*System.out.println("Index of upper rightmost secondary, i=ms = "+ms);*/
+   /*debug("Index of upper rightmost secondary, i=ms = "+ms);*/
 
    /* Compute the start point: upper rightmost of both. */
-   System.out.println("p0:");
+   debug("p0:");
    p0.PrintPoint();
-   System.out.println("mp is: "+mp);
-   System.out.println("mp element:"+P.GetElement(mp).v.x+","+P.GetElement(mp).v.y);
+   debug("mp is: "+mp);
+   debug("mp element:"+P.GetElement(mp).v.x+","+P.GetElement(mp).v.y);
    AddVec( p0, P.GetElement(mp).v, p0 );
-   System.out.println("p0 after addvec:");
+   debug("p0 after addvec:");
    p0.PrintPoint();
-   System.out.println("ms is: "+ms);
-   System.out.println("ms element:"+P.GetElement(ms).v.x+","+P.GetElement(ms).v.y);
+   debug("ms is: "+ms);
+   debug("ms element:"+P.GetElement(ms).v.x+","+P.GetElement(ms).v.y);
     //This is required, if the reference of the second rectangle is not (0,0), the first point should be changed.
    AddVec( p0, P.GetElement(ms).v, p0 );
-   System.out.println("p0 after another addvec:");
+   debug("p0 after another addvec:");
    p0.PrintPoint();
    return mp;
   }
 
   private void   PrintPoints()
   {
-    System.out.println("Combined list of points, P: ");
+    debug("Combined list of points, P: ");
     P.PrintDetailed();
   }
 
@@ -239,7 +240,7 @@ public class MinkConvol extends ADrawableObj {
     P.Sort2(0,P.n-1);
     PrintPoints();
     P.ReverseListCompletely();
-    System.out.println("list reversed...");
+    debug("list reversed...");
   }
 
   private void   Vectorize()
@@ -247,17 +248,17 @@ public class MinkConvol extends ADrawableObj {
     int i;
     cVertex v;
     v = P.head;
-    System.out.println("Vectorize: ");
-    System.out.println("list before victorization");
+    debug("Vectorize: ");
+    debug("list before victorization");
     P.PrintVertices();
     cVertex startB = P.GetElement(n);
-    System.out.print("startB !!!: ");
+    debug("startB !!!: ");
     startB.PrintVertex();
 
     SubVec( P.head.v, startB.prev.v, last);
     do {
       cPointi c = SubVec( v.next.v, v.v);
-      System.out.println("("+v.next.v.x+","+v.next.v.y+") - ("+v.v.x+","+v.v.y+")");
+      debug("("+v.next.v.x+","+v.next.v.y+") - ("+v.v.x+","+v.v.y+")");
       v.v.x = c.x;
       v.v.y = c.y;
       v = v.next;
@@ -269,7 +270,7 @@ public class MinkConvol extends ADrawableObj {
     v = startB;
     do {
       cPointi c = SubVec( v.next.v, v.v);
-      System.out.println("("+v.next.v.x+","+v.next.v.y+") - ("+v.v.x+","+v.v.y+")");
+      debug("("+v.next.v.x+","+v.next.v.y+") - ("+v.v.x+","+v.v.y+")");
       v.v.x = c.x;
       v.v.y = c.y;
       v = v.next;
@@ -277,6 +278,11 @@ public class MinkConvol extends ADrawableObj {
     P.head.prev.v.x = last.x;
     P.head.prev.v.y = last.y;
   }
+    private void debug(String str){
+        if(debug)
+        System.out.print(str);
+
+    }
   
   private void    Convolve()
   {
@@ -284,15 +290,14 @@ public class MinkConvol extends ADrawableObj {
     int j = 0;      /* Primary polygon indices */
     cVertex v = P.head;
 
-    System.out.println("Convolve: start array i = "+i+", primary j0="+j0);
-
-    System.out.println("move to:" + p0.x +"," +p0.y);
+    debug("Convolve: start array i = "+i+", primary j0="+j0);
+    debug("move to:" + p0.x +"," +p0.y);
     PutInOutput(p0.x,p0.y);
     
     i = 0;  /* start at angle -pi, rightward vector. */
     j = j0; /* start searching for j0. */
     v = P.GetElement(i);
-    System.out.println("Convolve, getElement(0)..."+v.v.x+", "+v.v.y);
+    debug("Convolve, getElement(0)..."+v.v.x+", "+v.v.y);
     do {
       
       /* Advance around secondary edges until next j reached. */
@@ -300,20 +305,20 @@ public class MinkConvol extends ADrawableObj {
 	if ( !v.mark ) {
 	  p0 = AddVec( p0, v.v );
 	  PutInOutput(p0.x,p0.y);
-      System.out.println("line to:" + p0.x +"," +p0.y);
+      debug("line to:" + p0.x +"," +p0.y);
 	}
 	v = v.next;
 	i = (i+1)%m;
-	//	System.out.println("X: i incremented to "+i);
+	//	debug("X: i incremented to "+i);
       }
       
       /* Advance one primary edge. */
-      System.out.println("X: j="+j+" found at i="+i);
+      debug("X: j="+j+" found at i="+i);
       p0 = AddVec( p0, v.v);
       PutInOutput(p0.x,p0.y);
-      System.out.println("line to:" + p0.x +"," +p0.y);
+      debug("line to:" + p0.x +"," +p0.y);
       j = (j+1)%n;
-      System.out.println("X: j incremented to "+j);
+      debug("X: j incremented to "+j);
       
     } while ( j != j0);
 
@@ -322,11 +327,11 @@ public class MinkConvol extends ADrawableObj {
       if ( !v.mark ) {
 	p0 = AddVec (p0, v.v);
 	PutInOutput (p0.x, p0.y);
-    System.out.println("line to:" + p0.x +"," +p0.y);
+    debug("line to:" + p0.x +"," +p0.y);
       }
       i = (i+1)%m;
     }
-    System.out.println("X: i incremented to " + i + " in final circuit");
+    debug("X: i incremented to " + i + " in final circuit");
   }
 
   private void PutInOutput( int x, int y )
@@ -374,7 +379,7 @@ public class MinkConvol extends ADrawableObj {
   public void DrawMinkConvol(Graphics g, int w, int h)
   {
    // not used
-//    System.out.println("before drawing enlarged polygon, its vertices:");
+//    debug("before drawing enlarged polygon, its vertices:");
 //    output.PrintVertices();
 //
 //    cVertex v1 = output.head;
@@ -390,7 +395,7 @@ public class MinkConvol extends ADrawableObj {
 //      v1 = v1.next;
 //    } while (v1 != output.head.prev);
 //    g.drawLine(v1.v.x, v1.v.y, v1.next.v.x, v1.next.v.y);
-//    System.out.println("the enlarged polygon has been drawn");
+//    debug("the enlarged polygon has been drawn");
   }
 
 
