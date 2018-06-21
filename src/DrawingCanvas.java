@@ -28,6 +28,7 @@ public class DrawingCanvas extends JFrame {
 
     private static cVertexList A;
     private static cVertexList B;
+    private static cVertexList nl;
     // Constructor to set up the GUI components and event handlers
     public DrawingCanvas() {
         canvas = new DrawCanvas();    // Construct the drawing canvas
@@ -450,7 +451,7 @@ public class DrawingCanvas extends JFrame {
     {
         MinkConvol mc = new MinkConvol();
         cVertexList first = new cVertexList();
-        first.InsertBeforeHead( new cVertex(0,0));
+        first.InsertBeforeHead(new cVertex(0,0));
         first.InsertBeforeHead(new cVertex(100,100));
         first.InsertBeforeHead(new cVertex(0,200));
         first.InsertBeforeHead(new cVertex(-100,100));
@@ -478,6 +479,83 @@ public class DrawingCanvas extends JFrame {
     static Map<cVertexList,Map<cVertexList,NFPPolygon>> twoD;
 
 
+    private static  List<Point> getOffsetPointList(NFPPolygon nfp,Filter filter) throws Exception {
+
+        double[] coords = new double[6];
+
+        List<Double[]> pointList = new ArrayList<Double[]>();
+        HashSet<Double[]> pointset = new HashSet<Double[]>();
+
+        for (PathIterator pi = nfp.getUnion().getPathIterator(null); !pi.isDone(); pi.next()) {
+            // Because the Area is composed of straight lines
+            int type = pi.currentSegment(coords);
+            Point.Double point = new Point.Double( coords[0],coords[1]);
+            if (filter.filt(point)) {
+                double distance = Math.pow(point.getX(), 2) + Math.pow(point.getY(), 2);
+                Double[] pathIteratorCoords = {distance, coords[0], coords[1]};
+                pointList.add(pathIteratorCoords);
+            }
+        }
+        //magic numbers, we only get specific number.
+        //// TODO: 2018/6/21 make this configurable.
+        if(pointList.size()==0)
+            throw new Exception("there is not point");
+        int rc = Math.max(3,pointList.size());
+        Collections.sort(pointList, new Comparator<Double[]>() {
+            @Override
+            public int compare(Double[] o1, Double[] o2) {
+                if(o1[0]<o2[0])
+                    return -1;
+                else if(o1[0]>o2[1])
+                    return 1;
+                else{
+                    return 0;
+                }
+            }
+        });
+
+
+        for(int i=0;i<rc;i++) {
+            Double[] d = pointList.get(i);
+            pointset.add(d);
+        }
+
+        Collections.sort(pointList, new Comparator<Double[]>() {
+            @Override
+            public int compare(Double[] o1, Double[] o2) {
+                Double y1 = Math.abs(o1[2]);
+                Double y2 = Math.abs(o2[2]);
+                Double x1 = Math.abs(o1[1]);
+                Double x2 = Math.abs(o2[1]);
+                if(y1<y2)
+                    return -1;
+                else if(y1>y2)
+                    return 1;
+                else{
+                    if(x1<x2)
+                        return -1;
+                    else if(x1>x2)
+                        return 1;
+                    else
+                        return 0;
+                }
+            }
+        });
+
+        for(int i=0;i<rc;i++) {
+            Double[] d = pointList.get(i);
+            pointset.add(d);
+        }
+
+        List<Point> resultList = new ArrayList<Point>();
+        for(Double[] d : pointset){
+
+            resultList.add(new Point((int)(double)d[1],(int)(double)d[2]));
+        }
+        return resultList;
+
+    }
+
     private static Point getOffsetPoint(NFPPolygon nfp,Filter filter)
     {
         ArrayList<double[]> areaPoints = new ArrayList<double[]>();
@@ -493,7 +571,7 @@ public class DrawingCanvas extends JFrame {
             double[] pathIteratorCoords = {type, coords[0], coords[1]};
             areaPoints.add(pathIteratorCoords);
             double[] point = pathIteratorCoords;
-            if(filter.filt(new Point((int)point[1],(int)point[2]))){
+            if(filter.filt(new Point.Double(point[1],point[2]))){
                 double distance = Math.sqrt(Math.pow(point[1],2)+Math.pow(point[2],2));
                 if(min>distance){
                     minx = point[1];
@@ -550,11 +628,11 @@ public class DrawingCanvas extends JFrame {
     }
 
     interface Filter{
-        boolean filt(Point p);
+        boolean filt(Point.Double p);
     }
 
     static class UpperLeft implements Filter{
-        public boolean filt(Point p){
+        public boolean filt(Point.Double p){
             if(p.x<0 && p.y>0)
                 return true;
             else
@@ -562,7 +640,7 @@ public class DrawingCanvas extends JFrame {
         }
     }
     static class UpperRightX implements Filter{
-        public boolean filt(Point p){
+        public boolean filt(Point.Double p){
             if(p.x>0 && p.y>=0 && p.x>2*p.y)
                 return true;
             else
@@ -570,7 +648,7 @@ public class DrawingCanvas extends JFrame {
         }
     }
     static class BottomLeftY implements Filter{
-        public boolean filt(Point p){
+        public boolean filt(Point.Double p){
             if(p.x<0 && p.y<0 && (-p.y)>(-2*p.x))
                 return true;
             else
@@ -579,7 +657,7 @@ public class DrawingCanvas extends JFrame {
     }
 
     static class BottomRightY implements Filter{
-        public boolean filt(Point p){
+        public boolean filt(Point.Double p){
             if(p.x>0 && p.y<0 && (-p.y)>2*p.x)
                 return true;
             else
@@ -588,7 +666,7 @@ public class DrawingCanvas extends JFrame {
     }
 
     static class BottomRightX implements Filter{
-        public boolean filt(Point p){
+        public boolean filt(Point.Double p){
             if(p.x>0 && p.y<0 && p.x>-(2*p.y))
                 return true;
             else
@@ -596,8 +674,18 @@ public class DrawingCanvas extends JFrame {
         }
     }
 
+    static class RightFilter implements Filter{
+        public boolean filt(Point.Double p){
+            if(p.x>0 && p.x>(2*Math.abs(p.y)))
+                return true;
+            else
+                return false;
+        }
+    }
+
+
     static class Bottom implements Filter{
-        public boolean filt(Point p){
+        public boolean filt(Point.Double p){
             if(p.y<0 && 2*Math.abs(p.x)<-(2*p.y))
                 return true;
             else
@@ -638,7 +726,7 @@ public class DrawingCanvas extends JFrame {
 
     private static void initTest(){
 
-        cVertexList list = initHungryCat();
+        cVertexList list = initHungryCat1();
         //cVertexList list = initSqureList3();
         //cVertexList list = initSqureList2();
         A = list;
@@ -656,6 +744,11 @@ public class DrawingCanvas extends JFrame {
         map.put(list,nfpPolygon);
         nfpPolygon = getNFP(rotatedList,rotatedList);
         map.put(rotatedList,nfpPolygon);
+
+        nl = movePolygon(list,new Point(2000,0));
+        nfpPolygon = getNFP(rotatedList,nl);
+        map.put(nl,nfpPolygon);
+
         twoD.put(rotatedList,map);
 
         map = new HashMap<cVertexList, NFPPolygon>();
@@ -663,15 +756,128 @@ public class DrawingCanvas extends JFrame {
         map.put(rotatedList,nfpPolygon);
         nfpPolygon = getNFP(list,list);
         map.put(list,nfpPolygon);
+
         twoD.put(list,map);
+
+
 
     }
 
-    private static void strategy(Filter f1,Filter f2,Filter f3,Point offset){
+
+
+    private static List<NestingResult> Stage1(cVertexList A, cVertexList B){
+        List<Point> points = null;
+        try {
+            points = getOffsetPointList(twoD.get(A).get(B), new BottomLeftY());
+        }
+        catch (Exception ex){
+            // TODO: 2018/6/21 find more appropriate means to handle this situation.
+        }
+
+        List<NestingResult> resultList = new ArrayList<NestingResult>();
+
+        for(Point point:points){
+            NestingResult r = new NestingResult();
+            r.A = A;
+            r.B = B;
+            r.PA = new Point(-point.x,-point.y);
+            resultList.add(r);
+        }
+        return resultList;
+    }
+
+    private static List<NestingResult> Stage2(List<NestingResult> stage1List){
+
+        List<NestingResult> resultList = new ArrayList<NestingResult>();
+
+        for(NestingResult r: stage1List){
+
+            TriangulatedPolygonUnion triangulatedPolygonUnionBA = new TriangulatedPolygonUnion();
+            triangulatedPolygonUnionBA.addTriList(triangulateMap.get(A),new Point(r.PA.x,r.PA.y));
+            triangulatedPolygonUnionBA.addTriList(triangulateMap.get(B),new Point(0,0));
+
+            NFPPolygon npBA = new NFPPolygon();
+            npBA = getNFPofTriList(npBA,triangulatedPolygonUnionBA.getTriList(),triangulatedPolygonUnionBA.getTriList());
+            Point pBA = getOffsetPoint(npBA,new UpperRightX());
+            NestingResult copy = r.copyOf();
+            copy.setPBA(pBA);
+            resultList.add(copy);
+        }
+
+        return resultList;
+    }
+
+    private static List<NestingResult> Stage3(List<NestingResult> stage2List){
+        List<NestingResult> resultList = new ArrayList<NestingResult>();
+
+        for(NestingResult r: stage2List) {
+
+            Point pBA = r.getPBA();
+
+            TriangulatedPolygonUnion triangulatedPolygonUnionBB = new TriangulatedPolygonUnion();
+            triangulatedPolygonUnionBB.addTriList(triangulateMap.get(B),pBA);
+            triangulatedPolygonUnionBB.addTriList(triangulateMap.get(B),new Point(0,0));
+
+            TriangulatedPolygonUnion triangulatedPolygonUnionAA = new TriangulatedPolygonUnion();
+            triangulatedPolygonUnionAA.addTriList(triangulateMap.get(A),pBA);
+            triangulatedPolygonUnionAA.addTriList(triangulateMap.get(A),new Point(0,0));
+
+            NFPPolygon npBBAA = new NFPPolygon();
+            npBBAA = getNFPofTriList(npBBAA,triangulatedPolygonUnionBB.getTriList(),triangulatedPolygonUnionAA.getTriList());
+            Point pBBAA = getOffsetPoint(npBBAA,new BottomRightY());
+            NestingResult copy = r.copyOf();
+            copy.setPBBAA(pBBAA);
+
+            Rectangle rA = A.getBoundingBox();
+            Rectangle rB = B.getBoundingBox();
+
+            int AreaAB = rA.height*rA.width + rB.height*rB.width;
+
+            int AreaNested1 = pBA.x*(r.getPA().x)- r.getPA().y*pBA.y;
+            int AreaNested2 = pBBAA.x*pBA.y-pBA.x*pBBAA.y;
+
+            int firstArea = rB.width*(r.getPA().y);
+
+            //double firstratio = (firstArea+ rA.height*rA.width)/(double)AreaAB;
+            double ratio = (AreaNested1+AreaNested2)/(double)AreaAB;
+
+            copy.set_ratio(ratio);
+
+            resultList.add(copy);
+        }
+
+        return resultList;
+    }
+
+    private static void drawNestingResult(NestingResult r,Point offset){
+        List<cVertexList> pList = new ArrayList<cVertexList>();
+        cVertexList A1 = movePolygon(r.getA(),r.PA);
+        cVertexList C = movePolygon(r.getA(),r.getPBBAA());
+        cVertexList C1 = movePolygon(C,r.getPBA());
+
+        cVertexList B1 = movePolygon(B,r.getPBA());
+        cVertexList A2 = movePolygon(A1,r.getPBA());
+
+        pList.add(A1);
+        pList.add(B);
+        pList.add(C);
+        pList.add(C1);
+        pList.add(B1);
+        pList.add(A2);
+
+        for (cVertexList p: pList ) {
+            drawObjList.add(new drawableVertexList(p, Color.black,offset));
+        }
+
+
+    }
+
+
+
+    private static NestingResult strategy(Filter f1,Filter f2,Filter f3,Point offset){
         System.out.println("strategy:"+ f1.toString()+","+f2.toString()+","+f3.toString());
         long starttime = System.currentTimeMillis();
 
-        NFPPolygon polygonAB = twoD.get(A).get(B);
         List<cVertexList> pList = new ArrayList<cVertexList>();
         Point point = getOffsetPoint(twoD.get(A).get(B), f1);
         TriangulatedPolygonUnion triangulatedPolygonUnionBA = new TriangulatedPolygonUnion();
@@ -717,19 +923,6 @@ public class DrawingCanvas extends JFrame {
         //pList.add(A3);
         //drawObjList.add(new DrawableArea(polygonAB.getUnion()));
 
-        cVertexList x = new cVertexList();
-        x.InsertBeforeHead(new cVertex(-1000,0));
-        x.InsertBeforeHead(new cVertex(1000,0));
-
-        cVertexList y = new cVertexList();
-        y.InsertBeforeHead(new cVertex(0,-1000));
-        y.InsertBeforeHead(new cVertex(0,1000));
-
-        pList.add(x);
-        pList.add(y);
-        for (cVertexList p: pList ) {
-            drawObjList.add(new drawableVertexList(p, Color.black,offset));
-        }
         System.out.println("execution time:"+ (System.currentTimeMillis()-starttime));
 
         Rectangle rA = A.getBoundingBox();
@@ -744,21 +937,152 @@ public class DrawingCanvas extends JFrame {
 
         double firstratio = (firstArea+ rA.height*rA.width)/(double)AreaAB;
         double ratio = (AreaNested1+AreaNested2)/(double)AreaAB;
-System.out.println("point:"+point.x+","+point.y);
+        System.out.println("point:"+point.x+","+point.y);
         System.out.println("first compress ratio is:" + firstratio);
 
         System.out.println("compress ratio is:" + ratio);
+
+        for (cVertexList p: pList ) {
+            drawObjList.add(new drawableVertexList(p, Color.black,offset));
+        }
+
+        NestingResult r = new NestingResult(A,B,new Point(-point.x,-point.y),pBA,pBBAA,ratio);
+        return r;
     }
-    private static void testTri(){
-        System.out.println("test testTri");
-        scale = 0.1;
+
+    private static class NestingResult{
+        private cVertexList A;
+        private cVertexList B;
+        private Point PA;
+        private Point PBA;
+        private Point PBBAA;
+        private double m_ratio;
+
+        public NestingResult(cVertexList a,cVertexList b, Point pa, Point pba, Point pbbaa, double ratio){
+            A=a;
+            B=b;
+            PA = pa;
+            PBA = pba;
+            PBBAA = pbbaa;
+            m_ratio = ratio;
+        }
+
+        public NestingResult(){
+
+        }
+
+        public NestingResult copyOf(){
+            NestingResult copy = new NestingResult();
+            copy.setA(this.getA());
+            copy.setB(this.getB());
+            copy.setPA(this.getPA());
+            copy.setPBA(this.getPBA());
+            copy.setPBBAA(this.getPBBAA());
+            copy.set_ratio(this.getRatio());
+
+            return copy;
+        }
+
+        public cVertexList getA() {
+            return A;
+        }
+
+        public cVertexList getB() {
+            return B;
+        }
+
+        public Point getPA() {
+            return PA;
+        }
+
+        public Point getPBA() {
+            return PBA;
+        }
+
+        public Point getPBBAA() {
+            return PBBAA;
+        }
+
+        public double getRatio() {
+            return m_ratio;
+        }
+
+        public void setA(cVertexList a) {
+            A = a;
+        }
+
+        public void setB(cVertexList b) {
+            B = b;
+        }
+
+        public void setPA(Point PA) {
+            this.PA = PA;
+        }
+
+        public void setPBA(Point PBA) {
+            this.PBA = PBA;
+        }
+
+        public void setPBBAA(Point PBBAA) {
+            this.PBBAA = PBBAA;
+        }
+
+        public void set_ratio(double m_ratio) {
+            this.m_ratio = m_ratio;
+        }
+    }
+
+
+    private static void testInThreeStage(){
+
+        System.out.println("test testInThreeStage");
+        scale = 0.3;
         tform.setToTranslation(200,200);
         tform.scale( scale, -scale);    // NOTE -- to make 1.0 'full width'.
         initTest();
-        strategy(new BottomLeftY(),new UpperRightX(),new BottomRightY(),new Point(0,0));
-        strategy(new BottomLeftY(),new BottomRightX(),new BottomRightY(),new Point(2500,0));
-        strategy(new BottomLeftY(),new BottomRightX(),new BottomLeftY(),new Point(5000,0));
-        strategy(new Bottom(),new UpperRightX(),new BottomLeftY(),new Point(7500,0));
+
+
+        List<NestingResult> results = Stage1(A, B);
+        results = Stage2(results);
+        results = Stage3(results);
+
+        int step = 1000;
+        int count=0;
+        for(NestingResult result: results){
+
+
+            Point offset = new Point((count%5)*step,count/5*step);
+            drawNestingResult(result,offset);
+            count++;
+            System.out.println("ratio: "+ result.getRatio());
+        }
+
+
+
+    }
+    private static void testTri(){
+        System.out.println("test testTri");
+        scale = 0.3;
+        tform.setToTranslation(200,200);
+        tform.scale( scale, -scale);    // NOTE -- to make 1.0 'full width'.
+        initTest();
+
+        int step = 1000;
+
+        int i = 0;
+
+       // PriorityQueue
+
+        strategy(new BottomLeftY(),new UpperRightX(),new BottomRightY(),new Point((i++)*step,0));
+        strategy(new BottomLeftY(),new BottomRightX(),new BottomRightY(),new Point((i++)*step,0));
+        strategy(new BottomLeftY(),new BottomRightX(),new BottomLeftY(),new Point((i++)*step,0));
+        strategy(new Bottom(),new UpperRightX(),new BottomLeftY(),new Point((i++)*step,0));
+
+        //examine how NFP would move if we move P or R
+//        NFPPolygon polygonAB = twoD.get(B).get(A);
+//        NFPPolygon polygonnl = twoD.get(B).get(nl);
+//        drawObjList.add(new DrawableArea(polygonAB.getUnion()));
+//        drawObjList.add(new DrawableArea(polygonnl.getUnion()));
 
         //strategy(new BottomRightY(),new UpperRightX(),new BottomRightY(),new Point(2500,0));
 
@@ -835,7 +1159,8 @@ System.out.println("point:"+point.x+","+point.y);
     }
     public static void main(String[] args) {
 
-        testTri();
+        //testTri();
+        testInThreeStage();
         //test1();
 
         // Run the GUI codes on the Event-Dispatching thread for thread safety
