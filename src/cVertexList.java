@@ -207,6 +207,22 @@ class cVertexList {
     debug("Reversing list...");
   }
 
+    public void removeDuplicate(){
+        cVertex first = head;
+        cVertex next = first.next;
+
+        do{
+            if(first.v.x==next.v.x && first.v.y == next.v.y){
+                first.next = next.next;
+            }
+            else{
+                first = first.next;
+            }
+            next = first.next;
+        }
+        while(first!=head && next!=head);
+    }
+
   /* Makes the last element to be the head and head to be the last, 
    * e.g., 0123 becomes 3210
    */
